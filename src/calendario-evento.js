@@ -1,24 +1,9 @@
+import attachCssToShadowDom from "./funciones";
 const template = document.createElement("div");
 template.className = "evento";
 template.innerHTML = `
-    <style>
-        .evento {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            padding: 5px;
-            border-radius: 4px;
-        }
-        .hora {
-            font-weight: bold;
-            margin-right: 10px;
-        }
-        .descripcion {
-            flex-grow: 1;
-        }
-    </style>
-    <span class="hora"></span>
-    <span class="descripcion"></span>
+    <span class="evento__hora"></span>
+    <span class="evento__descripcion"></span>
 `;
 
 class Evento extends HTMLElement {
@@ -32,7 +17,9 @@ class Evento extends HTMLElement {
 
   connectedCallback() {
       this.attachShadow({ mode: "open" });
-      console.log("Creacion evento");
+      // Attach del CSS al Shadow DOM
+      this.shadowRoot.appendChild(attachCssToShadowDom("calendario.css"));
+
       this.shadowRoot.appendChild(template.cloneNode(true));
       this.render();
   }
@@ -48,8 +35,8 @@ class Evento extends HTMLElement {
     const tipo = this.getAttribute("tipo");
 
     const eventoElement = this.shadowRoot.querySelector(".evento");
-    const horaElement = eventoElement.querySelector(".hora");
-    const descripcionElement = eventoElement.querySelector(".descripcion");
+    const horaElement = eventoElement.querySelector(".evento__hora");
+    const descripcionElement = eventoElement.querySelector(".evento__descripcion");
 
     if (horaElement) {
         horaElement.textContent = hora;
@@ -61,13 +48,16 @@ class Evento extends HTMLElement {
     
     switch (tipo) {
       case "tipo1":
-        eventoElement.style.backgroundColor = "#d3d3d3";
+        eventoElement.style.backgroundColor = "#EDF0F3";
         break;
       case "tipo2":
-        eventoElement.style.backgroundColor = "#f0e68c";
+        eventoElement.style.backgroundColor = "#FFE6B7";
         break;
       case "tipo3":
-        eventoElement.style.backgroundColor = "#98fb98";
+        eventoElement.style.backgroundColor = "#C5ECD9";
+        break;
+      case "tipo4":
+        eventoElement.style.backgroundColor = "#C5ECD9";
         break;
       default:
         eventoElement.style.backgroundColor = "#fff";

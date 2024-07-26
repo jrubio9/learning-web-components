@@ -1,22 +1,10 @@
 //import templateStr from './calendario-semana.html';
+import attachCssToShadowDom from "./funciones";
 
 const template = document.createElement("div");
 template.className = "contenedor";
 template.innerHTML = `
-    <style>
-    .contenedor {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-    }
-    .semana {
-        min-width: 500px;
-        display: flex;
-        overflow-x: scroll;
-        gap: 10px;
-    }
-    </style>
-    <h1>Semana</h1>
+    <!-- El style no hace falta ya que linkamos el archivo css en 'conectedCallback' -->
     <div id="eventos-semana" class="semana"></div>
 `;
 
@@ -32,6 +20,10 @@ class CalendarioSemana extends HTMLElement {
 
     connectedCallback() {
         this.attachShadow({ mode: 'open' });
+
+        // Attach del CSS al Shadow DOM
+        this.shadowRoot.appendChild(attachCssToShadowDom("calendario.css"));
+
         this.shadowRoot.appendChild(template.cloneNode(true));
         this.render();
     }
@@ -48,7 +40,15 @@ class CalendarioSemana extends HTMLElement {
             "eventos-semana",
           );
         console.log("SemanaContainer", semanaContainer);
+        let first = true;
         Object.keys(this._semana).map(dia => {
+            if (!first) {
+                let separador = document.createElement('div');
+                separador.className = "separador-dia";
+                semanaContainer.appendChild(separador);
+            } else {
+                first = false;
+            }
             // Crea un elemento 'calendario-dia' y establece sus atributos
             let componenteDia = document.createElement('calendario-dia');
             componenteDia.className = "componente-dia";

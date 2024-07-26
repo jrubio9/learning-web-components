@@ -5,14 +5,33 @@
 
   color-scheme: light dark;
   color: #364862;
-  background-color: #fbfbfb;
+  background-color: #959EAB;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  --royal-blue: #1e90ff;
+  --royal-blue: #0F10BA;
+  --warm-blue: #4956D1;
+  --warm-blue-2: #4F50DE;
+  --warm-blue-3: #5757CE;
+  --periwinkle: #8181D6;
+  --periwinkle-light: #B7B7EA;
+  --sky: #4A90E2;
+  --duck: #E5F2FA;
+  --duck-grey-blue: #364862;
+  --slate: #546673;
+  --steel: #738091;
+  --blue-grey: #90A1B8;
+  --cool-grey: #959EAB;
+  --silver: #D5D9DE;
+  --silver-2: #D4D4DD;
+  --pale-grey: #DBE2E8;
+  --pale-grey-2: #EAEEFA;
+  --pale-grey-3: #EDF0F3;
+  --marble: #EAEAEA;
+  --marble-2: #FBFBFB;
   --white: #ffffff;
 }
 
@@ -23,7 +42,17 @@ html {
 body {
   margin: 0;
   display: flex;
-  place-items: center;
+  flex-direction: column;
+  gap: 10px;
   min-width: 320px;
   min-height: 100vh;
+  padding: 15px 20px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.header {
+  background-color: var(--marble-2);
+  padding: 8px 12px;
+  border-radius: 10px;
 }

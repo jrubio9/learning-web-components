@@ -1,0 +1,112 @@
+
+/* ==================== */
+/*  RELATIVO A SEMANA   */
+/* ==================== */
+.contenedor {
+    width: 100%;
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    height: 900px;
+    overflow: hidden;
+    background-color: var(--marble-2);
+    border-radius: 10px;
+}
+.semana {
+    display: flex;
+    overflow-x: scroll;
+    gap: 10px;
+}
+
+.separador-dia {
+    border-left: 1px solid black;
+    height: 100%;
+    
+}
+
+/* ==================== */
+/*    RELATIVO A DÍA    */
+/* ==================== */
+
+/*
+ --> Problema del doble nivel
+.componente-dia {
+    display: flex;
+    flex-direction: column;
+}
+*/
+
+.dia {
+    border-radius: 8px;
+    padding: 10px;
+    min-width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    overflow-y: hidden;
+}
+.dia:before {
+    border-left: 1px solid black;
+    height: 100%;
+    width: 1px;
+}
+
+.dia__cabecera {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--royal-blue);
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.titulo-dia {
+    font-size: 1.2em;
+    padding: 10px 0;
+}
+
+.hoy {
+    color: var(--white);
+    background-color: var(--periwinkle);
+}
+
+.eventos-dia {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow-y: scroll;
+}
+
+.dia__anadir {
+    display: flex;
+    gap: 4px;
+    color: var(--steel);
+    font-weight: 600;
+}
+
+.link {
+    text-decoration: underline;
+}
+/* ==================== */
+/* RELATIVO A UN EVENTO */
+/* ==================== */
+.evento {
+    height: 42px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 12px;
+    border-radius: 4px;
+    border: 1px solid var(--steel);
+    font-size: 12px;
+}
+.evento__hora {
+    padding: 4px 6px;
+    border-radius: 4px;
+    font-weight: bold;
+    background-color: var(--pale-grey);
+    font-size: 13px;
+}
+.evento__descripcion {
+    flex-grow: 1;
+}
