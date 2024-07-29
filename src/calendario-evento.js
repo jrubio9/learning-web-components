@@ -3,12 +3,16 @@ const template = document.createElement("div");
 template.className = "evento";
 template.innerHTML = `
     <span class="evento__hora"></span>
-    <span class="evento__descripcion"></span>
+    <div class="evento__datos">
+      <span class="evento__datos--vehiculo"></span>
+      <span class="evento__datos--descripcion"></span>
+    </div>
+    <span class="evento__duracion"></span>
 `;
 
 class Evento extends HTMLElement {
   static get observedAttributes() {
-    return ["hora", "descripcion", "tipo"];
+    return ["hora", "vehiculo", "descripcion", "tipo, duracion"];
   }
 
   constructor() {
@@ -31,37 +35,52 @@ class Evento extends HTMLElement {
 
   render() {
     const hora = this.getAttribute("hora");
+    const vehiculo = this.getAttribute("vehiculo");
     const descripcion = this.getAttribute("desc");
     const tipo = this.getAttribute("tipo");
+    const duracion = this.getAttribute("duracion");
 
     const eventoElement = this.shadowRoot.querySelector(".evento");
     const horaElement = eventoElement.querySelector(".evento__hora");
-    const descripcionElement = eventoElement.querySelector(".evento__descripcion");
+    const vehiculoElement = eventoElement.querySelector(".evento__datos--vehiculo");
+    const descripcionElement = eventoElement.querySelector(".evento__datos--descripcion");
+    const duracionElement = eventoElement.querySelector(".evento__duracion");
 
-    if (horaElement) {
-        horaElement.textContent = hora;
-    }
-    if (descripcionElement) {
-        console.log("Tenemos desc", descripcion);
-        descripcionElement.textContent = descripcion;
-    }
-    
     switch (tipo) {
-      case "tipo1":
-        eventoElement.style.backgroundColor = "#EDF0F3";
-        break;
       case "tipo2":
-        eventoElement.style.backgroundColor = "#FFE6B7";
+        eventoElement.classList.add("evento--warning");
+        horaElement.classList.add("evento__hora--claro");
         break;
       case "tipo3":
-        eventoElement.style.backgroundColor = "#C5ECD9";
+        eventoElement.classList.add("evento--done");
+        horaElement.classList.add("evento__hora--claro");
         break;
       case "tipo4":
-        eventoElement.style.backgroundColor = "#C5ECD9";
+        eventoElement.classList.add("evento--error");
+        horaElement.classList.add("evento__hora--claro");
         break;
-      default:
-        eventoElement.style.backgroundColor = "#fff";
     }
+
+    if (vehiculo) {
+      vehiculoElement.textContent = vehiculo;
+    } else {
+      vehiculoElement.remove();
+    }
+
+    if (hora) {
+        horaElement.textContent = hora;
+    } else {
+      horaElement.remove();
+    }
+
+    if (descripcionElement) {
+        descripcionElement.textContent = vehiculo ? "- " + descripcion : descripcion;
+    }
+
+    if (duracion) {
+      duracionElement.textContent = duracion;
+    }
+
   }
 }
 

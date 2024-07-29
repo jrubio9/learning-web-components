@@ -11,3 +11,12 @@ export default function attachCssToShadowDom(nombreArchivo) {
 
     return linkElem;
 }
+
+export function attachLinkToShadowDom(href, rel) {
+
+const linkElem = document.createElement("link");
+    linkElem.setAttribute("rel", rel);
+    linkElem.setAttribute("href", href);
+
+    return linkElem;
+}

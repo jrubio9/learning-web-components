@@ -33,6 +33,13 @@
   --marble: #EAEAEA;
   --marble-2: #FBFBFB;
   --white: #ffffff;
+
+  /* Colores estados tarjetas */
+  --pastel-green: #E8F0D2;
+  --pastel-green-2: #C5ECD9;
+  --pastel-yellow: #FFE6B7;
+  --pastel-red: #FFCDCD;
+
 }
 
 html {
@@ -55,4 +62,11 @@ body {
   background-color: var(--marble-2);
   padding: 8px 12px;
   border-radius: 10px;
+}
+
+.calendario-semana {
+  display: flex;
+  flex: 1 1 auto;
+  overflow-x: scroll;
+  padding: 14px 0;
 }

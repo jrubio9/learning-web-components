@@ -7,15 +7,16 @@
     display: flex;
     flex: 1 1 auto;
     flex-direction: column;
-    height: 900px;
     overflow: hidden;
     background-color: var(--marble-2);
     border-radius: 10px;
 }
+
 .semana {
     display: flex;
     overflow-x: scroll;
     gap: 10px;
+    flex: 1 1 auto;
 }
 
 .separador-dia {
@@ -42,7 +43,6 @@
     min-width: 400px;
     display: flex;
     flex-direction: column;
-    gap: 15px;
     overflow-y: hidden;
 }
 .dia:before {
@@ -58,16 +58,24 @@
     color: var(--royal-blue);
     font-weight: 600;
     font-size: 14px;
+    margin: 10px 0;
 }
 
 .titulo-dia {
     font-size: 1.2em;
-    padding: 10px 0;
+    padding: 6px 0;
+}
+
+.royal-add:hover {
+    cursor: pointer;
+    color: var(--warm-blue);
 }
 
 .hoy {
     color: var(--white);
     background-color: var(--periwinkle);
+    border-radius: 6px;
+    padding: 6px 10px;
 }
 
 .eventos-dia {
@@ -75,6 +83,7 @@
     flex-direction: column;
     gap: 10px;
     overflow-y: scroll;
+    padding: 2px 4px;
 }
 
 .dia__anadir {
@@ -82,10 +91,16 @@
     gap: 4px;
     color: var(--steel);
     font-weight: 600;
+    margin-top: 10px;
+    cursor: pointer;
 }
 
-.link {
+.underline {
     text-decoration: underline;
+}
+
+.dia__anadir:hover {
+    color: var(--blue-grey);
 }
 /* ==================== */
 /* RELATIVO A UN EVENTO */
@@ -98,15 +113,53 @@
     padding: 0 12px;
     border-radius: 4px;
     border: 1px solid var(--steel);
+    background-color: var(--pale-grey-3);
     font-size: 12px;
 }
+
+.evento:hover {
+    scale: 1.02;
+}
+
+.evento--done {
+    background-color: var(--pastel-green-2);
+}
+
+.evento--warning {
+    background-color: var(--pastel-yellow);
+}
+
+.evento--error {
+    background-color: var(--pastel-red);
+}
+
 .evento__hora {
     padding: 4px 6px;
     border-radius: 4px;
-    font-weight: bold;
+    font-weight: 500;
     background-color: var(--pale-grey);
     font-size: 13px;
 }
-.evento__descripcion {
+
+.evento__hora--claro {
+    background-color: var(--marble-2);
+}
+
+.evento__datos {
+    display: flex;
+    flex: 1 1 auto;
+}
+
+.evento__datos--vehiculo {
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.evento__datos--descripcion {
     flex-grow: 1;
+    font-weight: 500;
+}
+
+.evento__duracion {
+    justify-self: flex-end;
 }
