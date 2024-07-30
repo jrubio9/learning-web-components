@@ -7,10 +7,15 @@ template.classList.add("eventos-semana");
 template.innerHTML = `<div id="dias" class="semana"></div>`;
 
 class CalendarioSemana extends HTMLElement {
+  // Elementos
   #diasContainers;
+  // Datos
   #diasVisibles = 7;
   #eventos;
   #fechaInicial;
+  // Visualización
+  #vistaCalendario; 
+
 
   constructor() {
     super();
@@ -84,7 +89,7 @@ class CalendarioSemana extends HTMLElement {
       componenteDia.className = "componente-dia";
       this.#diasContainers.appendChild(componenteDia);
     }
-    
+
     this.render();
 
     return this.shadowRoot.childNodes;

@@ -16,11 +16,12 @@ template.innerHTML = `
 `;
 
 class CalendarioDia extends HTMLElement {
+  // Datos
   #dia;
   #titulo;
   #eventos;
+  // Elementos
   #eventosContainer;
-
   #botonAnadir;
   #iconoAnadir;
 
@@ -41,18 +42,28 @@ class CalendarioDia extends HTMLElement {
     );
     this.shadowRoot.appendChild(template.cloneNode(true));
 
-    // Guardamos estas referencias para utilizarlas más adelante.
+    // Elementos
     this.#titulo = this.shadowRoot.querySelector(".titulo-dia");
     this.#eventosContainer = this.shadowRoot.querySelector(".eventos-dia");
-    // Eventos
     this.#botonAnadir = this.shadowRoot.querySelector(".dia__anadir");
     this.#iconoAnadir = this.shadowRoot.querySelector(".royal-add");
+
+    // Eventos
     this.#botonAnadir.addEventListener("click", () =>
       this.lanzarEventoAnadir()
     );
     this.#iconoAnadir.addEventListener("click", () =>
       this.lanzarEventoAnadir()
     );
+  }
+
+  adoptedCallback() {
+    // Segurament serà útil quan canviem una card d'un dia a un altre.
+  }
+
+  disconnectedCallback() {
+    this.#botonAnadir.removeEventListener("click", () => this.lanzarEventoAnadir());
+    this.#iconoAnadir.removeEventListener("click", () => this.lanzarEventoAnadir());
   }
 
   lanzarEventoAnadir = () => {
@@ -64,15 +75,6 @@ class CalendarioDia extends HTMLElement {
 
     this.shadowRoot.firstChild.dispatchEvent(event);
   };
-
-  disconnectedCallback() {
-    this.#botonAnadir.removeEventListener("click", () => this.lanzarEventoAnadir());
-    this.#iconoAnadir.removeEventListener("click", () => this.lanzarEventoAnadir());
-  }
-
-  adoptedCallback() {
-    // Segurament serà útil quan canviem una card d'un dia a un altre.
-  }
 
   // ===========
   // GETS / SETS

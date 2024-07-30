@@ -205,7 +205,9 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("evento nuevo!", e.detail);
   });
 
-
+  calendarioSemana.addEventListener('click-evento', e => {
+    console.log("Click en evento!", e.detail);
+  });
 
   // const buttonHoy = document.getElementById("btnHoy");
   // buttonHoy.addEventListener("click", () => {

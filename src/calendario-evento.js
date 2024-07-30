@@ -12,18 +12,15 @@ template.innerHTML = `
 `;
 
 class Evento extends HTMLElement {
+  // Elementos
   #eventoElement;
   #horaElement;
   #vehiculoElement;
   #descripcionElement;
   #duracionElement;
-
+  // Datos -> {hora, vehiculo, descripcion, duracion}
   #datos
-
-  static get observedAttributes() {
-    return [];
-  }
-
+  
   constructor() {
     super();
     this.#datos = null;
@@ -40,7 +37,27 @@ class Evento extends HTMLElement {
       this.#vehiculoElement = this.shadowRoot.querySelector(".evento__datos--vehiculo");
       this.#descripcionElement = this.shadowRoot.querySelector(".evento__datos--descripcion");
       this.#duracionElement = this.shadowRoot.querySelector(".evento__duracion");
+
+      this.#eventoElement.addEventListener("click", () => this.lanzarEventoClickCard());
   }
+
+  disconnectedCallback() {
+    this.#eventoElement.removeEventListener("click", () => this.lanzarEventoClickCard());
+  }
+
+  lanzarEventoClickCard = () => {
+    const event = new CustomEvent("click-evento", {
+      detail: this.#datos,
+      bubbles: true,
+      composed: true
+    });
+
+    this.shadowRoot.firstChild.dispatchEvent(event);
+  };
+
+  // ===========
+  // GETS / SETS
+  // ===========
 
   set datos(datos) {
     if (this.#datos && this.esIgual(datos)) {
