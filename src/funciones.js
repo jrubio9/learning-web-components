@@ -62,7 +62,7 @@ function getRandomInt(min, max) {
   
   function getRandomTipo() {
     const tipos = ["tipo1", "tipo2", "tipo3"];
-    return Math.random() > 0.5 ? tipos[getRandomInt(0, tipos.length - 1)] : '';
+    return Math.random() > 0.3 ? tipos[getRandomInt(0, tipos.length - 1)] : '';
   }
 
   export function generarEventoAleatorio(fecha) {
@@ -70,7 +70,7 @@ function getRandomInt(min, max) {
       fecha: fecha,
       hora: getRandomHora(),
       vehiculo: getRandomVehiculo(),
-      descripcion: getRandomDescripcion(),
+      desc: getRandomDescripcion(),
       duracion: getRandomDuracion(),
       tipo: getRandomTipo()
     };

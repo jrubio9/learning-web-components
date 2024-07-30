@@ -54,7 +54,7 @@ body {
   min-width: 320px;
   min-height: 100vh;
   padding: 15px 20px;
-  width: 100%;
+  
   overflow: hidden;
 }
 
@@ -62,6 +62,9 @@ body {
   background-color: var(--marble-2);
   padding: 8px 12px;
   border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .calendario-semana {
@@ -69,4 +72,14 @@ body {
   flex: 1 1 auto;
   overflow-x: scroll;
   padding: 14px 0;
+}
+
+.fila {
+  display: flex;
+  gap: 20px;
+}
+
+.grupo-col {
+  display: flex;
+  flex-direction: column;
 }

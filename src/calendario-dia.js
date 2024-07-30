@@ -16,18 +16,17 @@ template.innerHTML = `
 `;
 
 class CalendarioDia extends HTMLElement {
-   #titulo;
-   #listaEventos;
-   #botonAnadir;
+  #dia;
+  #titulo;
+  #eventos;
+  #eventosContainer;
 
-  static get observedAttributes() {
-    return ["dia"];
-  }
+  #botonAnadir;
+  #iconoAnadir;
 
   constructor() {
     super();
-    this._eventosDia = [];
-    this.anadirEventoDia = this.anadirEventoDia.bind(this);
+    this.#eventos = [];
   }
 
   connectedCallback() {
@@ -44,49 +43,65 @@ class CalendarioDia extends HTMLElement {
 
     // Guardamos estas referencias para utilizarlas más adelante.
     this.#titulo = this.shadowRoot.querySelector(".titulo-dia");
-    this.#listaEventos = this.shadowRoot.querySelector(".eventos-dia");
+    this.#eventosContainer = this.shadowRoot.querySelector(".eventos-dia");
+    // Eventos
     this.#botonAnadir = this.shadowRoot.querySelector(".dia__anadir");
-    this.#botonAnadir.addEventListener('click', this.anadirEventoDia);
+    this.#iconoAnadir = this.shadowRoot.querySelector(".royal-add");
+    this.#botonAnadir.addEventListener("click", () =>
+      this.lanzarEventoAnadir()
+    );
+    this.#iconoAnadir.addEventListener("click", () =>
+      this.lanzarEventoAnadir()
+    );
   }
 
+  lanzarEventoAnadir = () => {
+    const event = new CustomEvent("nuevo", {
+      detail: this.#dia,
+      bubbles: true,
+      composed: true
+    });
+
+    this.shadowRoot.firstChild.dispatchEvent(event);
+  };
+
   disconnectedCallback() {
-    this.#botonAnadir.removeEventListener('click', this.anadirEventoDia);
+    this.#botonAnadir.removeEventListener("click", () => this.lanzarEventoAnadir());
+    this.#iconoAnadir.removeEventListener("click", () => this.lanzarEventoAnadir());
   }
 
   adoptedCallback() {
     // Segurament serà útil quan canviem una card d'un dia a un altre.
   }
 
-  attributeChangedCallback(name, oldValue, newValue) {
-    if (oldValue === newValue) return;
-    //this.setAttribute(name, newValue)
-    this[name] = newValue;
-  }
+  // ===========
+  // GETS / SETS
+  // ===========
 
   get dia() {
-    return this.getAttribute('dia');
+    return this.#dia;
   }
 
   set dia(value) {
-    this.setAttribute('dia', value);
+    if (this.#dia === value) return;
+    this.#dia = value;
   }
 
-  anadirEventoDia() {
-    console.log(this.dia);
-    let evento = generarEventoAleatorio(this.dia);
-    console.log(evento);
-    // TODO: Aquí render o mejor añadimos solo el que estamos poniendo???
-    this._eventosDia.push(evento);
-    this.render();
-  }
-
-  setEventosDia(eventos) {
+  set eventos(eventos) {
     if (!Array.isArray(eventos)) {
       return;
     }
-    this._eventosDia = eventos;
+    this.#eventos = eventos;
     this.render();
   }
+
+  get eventos() {
+    return this.#eventos;
+  }
+
+  // ===========
+  // MÉTODOS
+  // ===========
 
   // Función para obtener el nombre del día de la semana y el día del mes
   formatearFecha(strFecha) {
@@ -115,32 +130,38 @@ class CalendarioDia extends HTMLElement {
     );
   }
 
+  filtrarEventosPorFecha = (fecha) => {
+    const fechaISO = fecha.toISOString().split("T")[0];
+    return this.#eventos.filter((evento) => evento.fecha === fechaISO);
+  };
+
+  crearDestruirContenedores = (necesarios) => {
+    while (this.#eventosContainer.childNodes.length > necesarios) {
+      this.#eventosContainer.removeChild(this.#eventosContainer.firstChild);
+    }
+
+    while (this.#eventosContainer.childNodes.length < necesarios) {
+      this.#eventosContainer.appendChild(
+        document.createElement("calendario-evento")
+      );
+    }
+  }
+
   render() {
-      this.#titulo.textContent = this.formatearFecha(this.dia);
+    this.#titulo.textContent = this.formatearFecha(this.#dia);
 
-      // Añadir clase CSS si la fecha es hoy
-      if (this.esHoy(this.dia)) {
-        this.#titulo.classList.add("hoy");
-      } else {
-        this.#titulo.classList.remove("hoy");
-      }
-  
-      let necesarios = this._eventosDia.length;
-       while (this.#listaEventos.childNodes.length > necesarios) {
-        this.#listaEventos.removeChild(this.#listaEventos.firstChild);
-      }
+    // Añadir clase CSS si la fecha es hoy
+    if (this.esHoy(this.#dia)) {
+      this.#titulo.classList.add("hoy");
+    } else {
+      this.#titulo.classList.remove("hoy");
+    }
+    const eventosDia = this.filtrarEventosPorFecha(this.#dia);
+    this.crearDestruirContenedores(eventosDia.length);
 
-       while (this.#listaEventos.childNodes.length < necesarios) {
-        this.#listaEventos.appendChild(document.createElement("calendario-evento"));
-      }
-
-      this._eventosDia.forEach((ev, index) => {
-        let evtExistente = this.#listaEventos.childNodes[index];
-        // Para evitar re-renders (solo asignamos datos cuando es nuevo o ha cambiado alguno de sus valores)
-        if (!evtExistente.getDatos() || !evtExistente.esIgual(ev)) {
-          this.#listaEventos.childNodes[index].setDatos(ev);
-        }
-      });
+    eventosDia.forEach((ev, index) => {
+      this.#eventosContainer.childNodes[index].datos = ev;
+    });
   }
 }
 

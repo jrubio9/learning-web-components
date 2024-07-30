@@ -1,165 +1,163 @@
-
 /* ==================== */
 /*  RELATIVO A SEMANA   */
 /* ==================== */
 .eventos-semana {
-    width: 100%;
-    display: flex;
-    flex: 1 1 auto;
-    flex-direction: column;
-    overflow: hidden;
-    background-color: var(--marble-2);
-    border-radius: 10px;
+  width: 100%;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  overflow: hidden;
+  background-color: var(--marble-2);
+  border-radius: 10px;
 }
 
 .semana {
-    display: flex;
-    overflow-x: scroll;
-    gap: 10px;
-    flex: 1 1 auto;
-}
-
-.separador-dia {
-    border-left: 1px solid black;
-    height: 100%;
-    
+  display: flex;
+  overflow-x: scroll;
+  flex: 1 1 auto;
 }
 
 /* ==================== */
 /*    RELATIVO A DÍA    */
 /* ==================== */
 
-/*
- --> Problema del doble nivel
 .componente-dia {
-    display: flex;
-    flex-direction: column;
+    position: relative;
 }
-*/
+.componente-dia:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 1px;
+  background: black;
+  z-index: 1;
+}
+
+
+.componente-dia:last-child:before {
+    display: none;
+}
 
 .dia {
-    border-radius: 8px;
-    padding: 10px;
-    min-width: 400px;
-    display: flex;
-    flex-direction: column;
-    overflow-y: hidden;
-}
-.dia:before {
-    border-left: 1px solid black;
-    height: 100%;
-    width: 1px;
+  border-radius: 8px;
+  padding: 10px;
+  min-width: 400px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: hidden;
 }
 
 .dia__cabecera {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: var(--royal-blue);
-    font-weight: 600;
-    font-size: 14px;
-    margin: 10px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--royal-blue);
+  font-weight: 600;
+  font-size: 14px;
+  margin: 10px 0;
 }
 
 .titulo-dia {
-    font-size: 1.2em;
-    padding: 6px 0;
+  font-size: 1.2em;
+  padding: 6px 0;
 }
 
 .royal-add:hover {
-    cursor: pointer;
-    color: var(--warm-blue);
+  cursor: pointer;
+  color: var(--warm-blue);
 }
 
 .hoy {
-    color: var(--white);
-    background-color: var(--periwinkle);
-    border-radius: 6px;
-    padding: 6px 10px;
+  color: var(--white);
+  background-color: var(--periwinkle);
+  border-radius: 6px;
+  padding: 6px 10px;
 }
 
 .eventos-dia {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    overflow-y: scroll;
-    padding: 2px 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: scroll;
+  padding: 2px 4px;
 }
 
 .dia__anadir {
-    display: flex;
-    gap: 4px;
-    color: var(--steel);
-    font-weight: 600;
-    margin-top: 10px;
-    cursor: pointer;
+  display: flex;
+  gap: 4px;
+  color: var(--steel);
+  font-weight: 600;
+  margin-top: 10px;
+  cursor: pointer;
 }
 
 .underline {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 .dia__anadir:hover {
-    color: var(--blue-grey);
+  color: var(--blue-grey);
 }
 /* ==================== */
 /* RELATIVO A UN EVENTO */
 /* ==================== */
 .evento {
-    height: 42px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 0 12px;
-    border-radius: 4px;
-    border: 1px solid var(--steel);
-    background-color: var(--pale-grey-3);
-    font-size: 12px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  border-radius: 4px;
+  border: 1px solid var(--steel);
+  background-color: var(--pale-grey-3);
+  font-size: 12px;
 }
 
 .evento:hover {
-    scale: 1.02;
+  scale: 1.02;
 }
 
 .evento--done {
-    background-color: var(--pastel-green-2);
+  background-color: var(--pastel-green-2);
 }
 
 .evento--warning {
-    background-color: var(--pastel-yellow);
+  background-color: var(--pastel-yellow);
 }
 
 .evento--error {
-    background-color: var(--pastel-red);
+  background-color: var(--pastel-red);
 }
 
 .evento__hora {
-    padding: 4px 6px;
-    border-radius: 4px;
-    font-weight: 500;
-    background-color: var(--pale-grey);
-    font-size: 13px;
+  padding: 4px 6px;
+  border-radius: 4px;
+  font-weight: 500;
+  background-color: var(--pale-grey);
+  font-size: 13px;
 }
 
 .evento__hora--claro {
-    background-color: var(--marble-2);
+  background-color: var(--marble-2);
 }
 
 .evento__datos {
-    display: flex;
-    flex: 1 1 auto;
+  display: flex;
+  flex: 1 1 auto;
 }
 
 .evento__datos--vehiculo {
-    font-weight: 600;
-    font-size: 13px;
+  font-weight: 600;
+  font-size: 13px;
 }
 
 .evento__datos--descripcion {
-    flex-grow: 1;
-    font-weight: 500;
+  flex-grow: 1;
+  font-weight: 500;
 }
 
 .evento__duracion {
-    justify-self: flex-end;
+  justify-self: flex-end;
 }

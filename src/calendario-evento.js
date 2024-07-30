@@ -18,13 +18,15 @@ class Evento extends HTMLElement {
   #descripcionElement;
   #duracionElement;
 
+  #datos
+
   static get observedAttributes() {
     return [];
   }
 
   constructor() {
     super();
-    this._datos = null;
+    this.#datos = null;
   }
 
   connectedCallback() {
@@ -38,27 +40,26 @@ class Evento extends HTMLElement {
       this.#vehiculoElement = this.shadowRoot.querySelector(".evento__datos--vehiculo");
       this.#descripcionElement = this.shadowRoot.querySelector(".evento__datos--descripcion");
       this.#duracionElement = this.shadowRoot.querySelector(".evento__duracion");
-      if (this.datos){
-        this.render();
-      }
   }
 
-  getDatos() {
-    return this._datos;
-  }
-
-  setDatos(datos) {
-    this._datos = datos;
+  set datos(datos) {
+    if (this.#datos && this.esIgual(datos)) {
+      return;
+    }
+    this.#datos = datos;
     this.render();
   }
 
+  get datos() {
+    return this.#datos;
+  }
+
   esIgual(evento) {
-    return this._datos.hora === evento.hora && this._datos.vehiculo === evento.vehiculo && this._datos.descripcion === evento.descripcion && this._datos.duracion === evento.duracion;
+    return this.#datos.hora === evento.hora && this.#datos.vehiculo === evento.vehiculo && this.#datos.descripcion === evento.descripcion && this.#datos.duracion === evento.duracion;
   }
 
   render() {
-    const evento = this._datos;
-    console.log("Se actualiza evento");
+    const evento = this.#datos;
     switch (evento.tipo) {
       case "tipo2":
         this.#eventoElement.classList.add("evento--warning");

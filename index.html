@@ -13,7 +13,22 @@
 </head>
 <body>
     <div class="header">
-        Planificador
+        <span>Planificador</span>
+        <div class="fila">
+
+            <button id="btnFlechaLeft" style="width: 30px;height: 30px; align-self: center; margin-top: 5px">&laquo;</button>
+            <button id="btnHoy" style="width: 60px;height: 45px; align-self: flex-end;">Hoy</button>
+            <button id="btnFlechaRight" style="width: 30px;height: 30px; align-self: center; margin-top: 5px">&raquo;</button>
+            
+            <div class="grupo-col">
+                <label for="finicio">Fecha Inicio:</label>
+                <input type="date" id="finicio" name="Fecha Inicio">
+            </div>
+            <div class="grupo-col">
+                <label for="diasMostrar">Días a mostrar:</label>
+                <input type="number" id="diasMostrar" name="Días a mostrar">
+            </div>
+        </div>
     </div>
     <calendario-semana></calendario-semana>
     <script type="module" src="/main.js"></script>

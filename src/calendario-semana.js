@@ -8,16 +8,14 @@ template.innerHTML = `<div id="dias" class="semana"></div>`;
 
 class CalendarioSemana extends HTMLElement {
   #diasContainers;
-  diasVisibles = 2;
-
-  static get observedAttributes() {
-    return ["fechaInicial"];
-  }
+  #diasVisibles = 7;
+  #eventos;
+  #fechaInicial;
 
   constructor() {
     super();
-    this._eventos = [];
-    this.fechaInicial = new Date();
+    this.#eventos = [];
+    this.#fechaInicial = new Date();
   }
 
   connectedCallback() {
@@ -29,78 +27,78 @@ class CalendarioSemana extends HTMLElement {
     shadowRoot.appendChild(template.cloneNode(true));
 
     this.#diasContainers = shadowRoot.getElementById("dias");
+    this.masterRender();
+  }
+  // ===========
+  // GETS Y SETS
+  // ===========
 
+  set fecha_inicial(valor) {
+    let fecha = valor instanceof Date ? valor : new Date(valor);
+    if (this.#fechaInicial === fecha) {
+      return;
+    }
+    this.#fechaInicial = fecha;
+    this.masterRender();
+  }
+
+  get fecha_inicial() {
+    return this.#fechaInicial;
+  }
+
+  set dias(valor) {
+    if (this.#diasVisibles === valor) {
+      return;
+    }
+    this.#diasVisibles = valor;
+    this.masterRender();
+  }
+
+  get dias() {
+    return this.#diasVisibles;
+  }
+
+  set eventos(data) {
+    this.#eventos = data;
     this.render();
   }
 
-  // get fechaInicial() {
-  //   return this.fechaInicial;
-  // }
+  // ===========
+  // MÉTODOS
+  // ===========
 
-  // set fechaInicial(valor) {
-  //   this.fechaInicial = valor;
-  // }
+  addDays = (date, days) => {
+    let newDate = new Date(date);
+    newDate.setDate(date.getDate() + days);
+    return newDate;
+  };
 
-  setDiasVisibles(valor) {
-    this.diasVisibles = valor;
-  }
-
-  setEventosSemana(data) {
-    this._eventos = data;
-    this.render();
-  }
-
-  masterRender(dias) {
-    let necesarios = dias || thisdiasVisibles;
-
+  masterRender() {
+    let necesarios = this.#diasVisibles;
     while (this.#diasContainers.childNodes.length > necesarios) {
       this.#diasContainers.removeChild(this.#diasContainers.firstChild);
     }
 
     while (this.#diasContainers.childNodes.length < necesarios) {
-      this.#diasContainers.appendChild(
-        document.createElement("calendario-evento")
-      );
+      let componenteDia = document.createElement("calendario-dia");
+      componenteDia.className = "componente-dia";
+      this.#diasContainers.appendChild(componenteDia);
     }
+    
+    this.render();
 
     return this.shadowRoot.childNodes;
   }
 
-  addDays = (date, days) => {
-    const newDate = new Date(date);
-    newDate.setDate(date.getDate() + days);
-    return newDate;
-  };
-
-  filtrarEventosPorFecha = (eventos, fecha) => {
-    const fechaISO = fecha.toISOString().split("T")[0];
-    return eventos.filter((evento) => evento.fecha === fechaISO);
-  };
-
   render() {
-    if (!this._eventos || this._eventos.length === 0) return;
-    let first = true;
+    if (!this.#eventos || this.#eventos.length === 0) return;
 
-    for (let i = 0; i < this.diasVisibles; i++) {
-      let fecha = this.addDays(this.fechaInicial, i);
+    for (let i = 0; i < this.#diasVisibles; i++) {
+      let fecha = this.addDays(this.#fechaInicial, i);
       // Obtener los eventos de esa fecha
-      const eventosDia = this.filtrarEventosPorFecha(this._eventos, fecha);
-
-      if (i !== 0 && i != this.diasVisibles) {
-        let separador = document.createElement("div");
-        separador.className = "separador-dia";
-        this.#diasContainers.appendChild(separador);
-      }
-    
-      // Crea un elemento 'calendario-dia' y establece sus atributos
-      let componenteDia = document.createElement("calendario-dia");
-      componenteDia.className = "componente-dia";
-      componenteDia.setAttribute("dia", fecha);
-      // Añade el componente al shadowRoot
-      this.#diasContainers.appendChild(componenteDia);
-
-      // Asignamos los eventos
-      componenteDia.setEventosDia(eventosDia);
+      let componenteDia = this.#diasContainers.childNodes[i];
+      componenteDia.dia = fecha;
+      componenteDia.eventos = this.#eventos;
     }
   }
 }
