@@ -1,4 +1,5 @@
 import attachCssToShadowDom from "./funciones";
+
 const template = document.createElement("div");
 template.className = "evento";
 template.innerHTML = `
@@ -11,76 +12,90 @@ template.innerHTML = `
 `;
 
 class Evento extends HTMLElement {
+  #eventoElement;
+  #horaElement;
+  #vehiculoElement;
+  #descripcionElement;
+  #duracionElement;
+
   static get observedAttributes() {
-    return ["hora", "vehiculo", "descripcion", "tipo, duracion"];
+    return [];
   }
 
   constructor() {
     super();
+    this._datos = null;
   }
 
   connectedCallback() {
       this.attachShadow({ mode: "open" });
       // Attach del CSS al Shadow DOM
       this.shadowRoot.appendChild(attachCssToShadowDom("calendario.css"));
-
       this.shadowRoot.appendChild(template.cloneNode(true));
-      this.render();
+
+      this.#eventoElement = this.shadowRoot.querySelector(".evento");
+      this.#horaElement = this.shadowRoot.querySelector(".evento__hora");
+      this.#vehiculoElement = this.shadowRoot.querySelector(".evento__datos--vehiculo");
+      this.#descripcionElement = this.shadowRoot.querySelector(".evento__datos--descripcion");
+      this.#duracionElement = this.shadowRoot.querySelector(".evento__duracion");
+      if (this.datos){
+        this.render();
+      }
   }
 
-  attributeChangedCallback(name, oldValue, newValue) {
-    if (oldValue === newValue) return;
-    this[name] = newValue;
+  getDatos() {
+    return this._datos;
+  }
+
+  setDatos(datos) {
+    this._datos = datos;
+    this.render();
+  }
+
+  esIgual(evento) {
+    return this._datos.hora === evento.hora && this._datos.vehiculo === evento.vehiculo && this._datos.descripcion === evento.descripcion && this._datos.duracion === evento.duracion;
   }
 
   render() {
-    const hora = this.getAttribute("hora");
-    const vehiculo = this.getAttribute("vehiculo");
-    const descripcion = this.getAttribute("desc");
-    const tipo = this.getAttribute("tipo");
-    const duracion = this.getAttribute("duracion");
-
-    const eventoElement = this.shadowRoot.querySelector(".evento");
-    const horaElement = eventoElement.querySelector(".evento__hora");
-    const vehiculoElement = eventoElement.querySelector(".evento__datos--vehiculo");
-    const descripcionElement = eventoElement.querySelector(".evento__datos--descripcion");
-    const duracionElement = eventoElement.querySelector(".evento__duracion");
-
-    switch (tipo) {
+    const evento = this._datos;
+    console.log("Se actualiza evento");
+    switch (evento.tipo) {
       case "tipo2":
-        eventoElement.classList.add("evento--warning");
-        horaElement.classList.add("evento__hora--claro");
+        this.#eventoElement.classList.add("evento--warning");
+        this.#horaElement.classList.add("evento__hora--claro");
         break;
       case "tipo3":
-        eventoElement.classList.add("evento--done");
-        horaElement.classList.add("evento__hora--claro");
+        this.#eventoElement.classList.add("evento--done");
+        this.#horaElement.classList.add("evento__hora--claro");
         break;
       case "tipo4":
-        eventoElement.classList.add("evento--error");
-        horaElement.classList.add("evento__hora--claro");
+        this.#eventoElement.classList.add("evento--error");
+        this.#horaElement.classList.add("evento__hora--claro");
         break;
+        default:
+          // borrar las clases que tenga evento y hora (para que se muestre correctamente si estamos actualizando)
+          this.#eventoElement.className = "evento";
+          this.#horaElement.classList.remove("evento__hora--claro");
+          break;
     }
 
-    if (vehiculo) {
-      vehiculoElement.textContent = vehiculo;
+    if (evento.vehiculo) {
+      this.#vehiculoElement.textContent = evento.vehiculo;
     } else {
-      vehiculoElement.remove();
+      this.#vehiculoElement.remove();
     }
 
-    if (hora) {
-        horaElement.textContent = hora;
+    if (evento.hora) {
+      this.#horaElement.textContent = evento.hora;
     } else {
-      horaElement.remove();
+      this.#horaElement.remove();
     }
 
-    if (descripcionElement) {
-        descripcionElement.textContent = vehiculo ? "- " + descripcion : descripcion;
-    }
+    this.#descripcionElement.textContent = evento.vehiculo ? "- " + evento.desc : evento.desc;
 
-    if (duracion) {
-      duracionElement.textContent = duracion;
+    if (evento.duracion) {
+      this.#duracionElement.textContent = evento.duracion;
     }
-
   }
 }
 

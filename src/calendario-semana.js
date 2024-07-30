@@ -2,55 +2,106 @@
 import attachCssToShadowDom from "./funciones";
 
 const template = document.createElement("div");
-template.className = "contenedor";
-template.innerHTML = `<div id="eventos-semana" class="semana"></div>`;
+template.id = "eventos-semana";
+template.classList.add("eventos-semana");
+template.innerHTML = `<div id="dias" class="semana"></div>`;
 
 class CalendarioSemana extends HTMLElement {
+  #diasContainers;
+  diasVisibles = 2;
+
   static get observedAttributes() {
-    return [];
+    return ["fechaInicial"];
   }
 
   constructor() {
     super();
-    this._semana = [];
+    this._eventos = [];
+    this.fechaInicial = new Date();
   }
 
   connectedCallback() {
-    this.attachShadow({ mode: "open" });
+    let shadowRoot = this.attachShadow({ mode: "open" });
 
     // Attach del CSS al Shadow DOM
-    this.shadowRoot.appendChild(attachCssToShadowDom("calendario.css"));
-    this.shadowRoot.className = "calendario__semana";
-    this.shadowRoot.appendChild(template.cloneNode(true));
+    shadowRoot.appendChild(attachCssToShadowDom("calendario.css"));
+    shadowRoot.className = "calendario__semana";
+    shadowRoot.appendChild(template.cloneNode(true));
+
+    this.#diasContainers = shadowRoot.getElementById("dias");
+
     this.render();
+  }
+
+  // get fechaInicial() {
+  //   return this.fechaInicial;
+  // }
+
+  // set fechaInicial(valor) {
+  //   this.fechaInicial = valor;
+  // }
+
+  setDiasVisibles(valor) {
+    this.diasVisibles = valor;
   }
 
   setEventosSemana(data) {
-    this._semana = data;
+    this._eventos = data;
     this.render();
   }
 
+  masterRender(dias) {
+    let necesarios = dias || thisdiasVisibles;
+
+    while (this.#diasContainers.childNodes.length > necesarios) {
+      this.#diasContainers.removeChild(this.#diasContainers.firstChild);
+    }
+
+    while (this.#diasContainers.childNodes.length < necesarios) {
+      this.#diasContainers.appendChild(
+        document.createElement("calendario-evento")
+      );
+    }
+
+    return this.shadowRoot.childNodes;
+  }
+
+  addDays = (date, days) => {
+    const newDate = new Date(date);
+    newDate.setDate(date.getDate() + days);
+    return newDate;
+  };
+
+  filtrarEventosPorFecha = (eventos, fecha) => {
+    const fechaISO = fecha.toISOString().split("T")[0];
+    return eventos.filter((evento) => evento.fecha === fechaISO);
+  };
+
   render() {
-    if (!this._semana) return;
-    const semanaContainer = this.shadowRoot.getElementById("eventos-semana");
+    if (!this._eventos || this._eventos.length === 0) return;
     let first = true;
-    this._semana.map((dia) => {
-      if (!first) {
+
+    for (let i = 0; i < this.diasVisibles; i++) {
+      let fecha = this.addDays(this.fechaInicial, i);
+      // Obtener los eventos de esa fecha
+      const eventosDia = this.filtrarEventosPorFecha(this._eventos, fecha);
+
+      if (i !== 0 && i != this.diasVisibles) {
         let separador = document.createElement("div");
         separador.className = "separador-dia";
-        semanaContainer.appendChild(separador);
-      } else {
-        first = false;
+        this.#diasContainers.appendChild(separador);
       }
+    
       // Crea un elemento 'calendario-dia' y establece sus atributos
       let componenteDia = document.createElement("calendario-dia");
       componenteDia.className = "componente-dia";
-      componenteDia.setAttribute("dia", dia.fecha);
+      componenteDia.setAttribute("dia", fecha);
       // Añade el componente al shadowRoot
-      semanaContainer.appendChild(componenteDia);
+      this.#diasContainers.appendChild(componenteDia);
+
       // Asignamos los eventos
-      componenteDia.setEventosDia(dia.eventos);
-    });
+      componenteDia.setEventosDia(eventosDia);
+    }
   }
 }
 

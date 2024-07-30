@@ -1,22 +1,8 @@
-<template id="evento-template">
-    <style>
-        .evento {
-            display: flex;
-            align-items: center;
-            margin-bottom: 5px;
-            padding: 5px;
-            border-radius: 4px;
-        }
-        .hora {
-            font-weight: bold;
-            margin-right: 10px;
-        }
-        .descripcion {
-            flex-grow: 1;
-        }
-    </style>
-    <div class="evento">
-        <span class="hora"></span>
-        <span class="descripcion"></span>
+<div id="evento-template" class="evento">
+    <span class="evento__hora"></span>
+    <div class="evento__datos">
+      <span class="evento__datos--vehiculo"></span>
+      <span class="evento__datos--descripcion"></span>
     </div>
-</template>
+    <span class="evento__duracion"></span>
+</div>

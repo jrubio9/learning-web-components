@@ -1,10 +1,9 @@
-import attachCssToShadowDom from "./funciones";
+import attachCssToShadowDom, { generarEventoAleatorio } from "./funciones";
 import { attachLinkToShadowDom } from "./funciones";
 
 const template = document.createElement("div");
 template.className = "dia";
 template.innerHTML = `
-<!-- El estilo "host corresponde al mismo que el nombre definido en "customElements.define() -->
   <div class="dia__cabecera">
     <span class="titulo-dia"></span>
     <span class="material-icons royal-add">add</span>
@@ -17,14 +16,18 @@ template.innerHTML = `
 `;
 
 class CalendarioDia extends HTMLElement {
+   #titulo;
+   #listaEventos;
+   #botonAnadir;
+
   static get observedAttributes() {
     return ["dia"];
   }
 
   constructor() {
     super();
-    this._dia = "";
-    this._eventos = [];
+    this._eventosDia = [];
+    this.anadirEventoDia = this.anadirEventoDia.bind(this);
   }
 
   connectedCallback() {
@@ -38,6 +41,16 @@ class CalendarioDia extends HTMLElement {
       )
     );
     this.shadowRoot.appendChild(template.cloneNode(true));
+
+    // Guardamos estas referencias para utilizarlas más adelante.
+    this.#titulo = this.shadowRoot.querySelector(".titulo-dia");
+    this.#listaEventos = this.shadowRoot.querySelector(".eventos-dia");
+    this.#botonAnadir = this.shadowRoot.querySelector(".dia__anadir");
+    this.#botonAnadir.addEventListener('click', this.anadirEventoDia);
+  }
+
+  disconnectedCallback() {
+    this.#botonAnadir.removeEventListener('click', this.anadirEventoDia);
   }
 
   adoptedCallback() {
@@ -46,22 +59,32 @@ class CalendarioDia extends HTMLElement {
 
   attributeChangedCallback(name, oldValue, newValue) {
     if (oldValue === newValue) return;
+    //this.setAttribute(name, newValue)
     this[name] = newValue;
   }
 
-  set dia(value) {
-    this._dia = value;
+  get dia() {
+    return this.getAttribute('dia');
   }
 
-  get dia() {
-    return this._dia;
+  set dia(value) {
+    this.setAttribute('dia', value);
+  }
+
+  anadirEventoDia() {
+    console.log(this.dia);
+    let evento = generarEventoAleatorio(this.dia);
+    console.log(evento);
+    // TODO: Aquí render o mejor añadimos solo el que estamos poniendo???
+    this._eventosDia.push(evento);
+    this.render();
   }
 
   setEventosDia(eventos) {
     if (!Array.isArray(eventos)) {
       return;
     }
-    this._eventos = eventos;
+    this._eventosDia = eventos;
     this.render();
   }
 
@@ -93,34 +116,31 @@ class CalendarioDia extends HTMLElement {
   }
 
   render() {
-    if (!this._dia || !this._eventos) return;
-
-    const titulo = this.shadowRoot.querySelector(".titulo-dia");
-    const eventosContainer = this.shadowRoot.querySelector(".eventos-dia");
-
-    if (titulo) {
-      titulo.textContent = this.formatearFecha(this._dia);
+      this.#titulo.textContent = this.formatearFecha(this.dia);
 
       // Añadir clase CSS si la fecha es hoy
-      if (this.esHoy(this._dia)) {
-        titulo.classList.add("hoy");
+      if (this.esHoy(this.dia)) {
+        this.#titulo.classList.add("hoy");
+      } else {
+        this.#titulo.classList.remove("hoy");
       }
-    }
+  
+      let necesarios = this._eventosDia.length;
+       while (this.#listaEventos.childNodes.length > necesarios) {
+        this.#listaEventos.removeChild(this.#listaEventos.firstChild);
+      }
 
-    if (eventosContainer) {
-      this._eventos.map((ev) => {
-        let componenteEvento = document.createElement("calendario-evento");
-        componenteEvento.setAttribute("hora", ev.hora);
-        componenteEvento.setAttribute("desc", ev.desc);
-        componenteEvento.setAttribute("tipo", ev.tipo);
-        componenteEvento.setAttribute("duracion", ev.duracion);
-        componenteEvento.setAttribute("vehiculo", ev.vehiculo);
-        // Añade el componente al shadowRoot
-        eventosContainer.appendChild(componenteEvento);
+       while (this.#listaEventos.childNodes.length < necesarios) {
+        this.#listaEventos.appendChild(document.createElement("calendario-evento"));
+      }
+
+      this._eventosDia.forEach((ev, index) => {
+        let evtExistente = this.#listaEventos.childNodes[index];
+        // Para evitar re-renders (solo asignamos datos cuando es nuevo o ha cambiado alguno de sus valores)
+        if (!evtExistente.getDatos() || !evtExistente.esIgual(ev)) {
+          this.#listaEventos.childNodes[index].setDatos(ev);
+        }
       });
-    }
-
-    // Span añadir tarjeta
   }
 }
 
