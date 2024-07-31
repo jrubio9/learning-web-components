@@ -1,6 +1,6 @@
 import attachCssToShadowDom from "./funciones";
 
-const template = document.createElement("div");
+const template = document.createElement("template");
 template.className = "evento";
 template.innerHTML = `
     <span class="evento__hora"></span>
@@ -20,7 +20,7 @@ class Evento extends HTMLElement {
   #duracionElement;
   // Datos -> {hora, vehiculo, descripcion, duracion}
   #datos
-  
+
   constructor() {
     super();
     this.#datos = null;
@@ -30,9 +30,10 @@ class Evento extends HTMLElement {
       this.attachShadow({ mode: "open" });
       // Attach del CSS al Shadow DOM
       this.shadowRoot.appendChild(attachCssToShadowDom("calendario.css"));
-      this.shadowRoot.appendChild(template.cloneNode(true));
-
-      this.#eventoElement = this.shadowRoot.querySelector(".evento");
+      this.shadowRoot.getRootNode().host.className="evento";
+      this.shadowRoot.appendChild(template.content.cloneNode(true));
+      
+      this.#eventoElement = this.shadowRoot.getRootNode().host;
       this.#horaElement = this.shadowRoot.querySelector(".evento__hora");
       this.#vehiculoElement = this.shadowRoot.querySelector(".evento__datos--vehiculo");
       this.#descripcionElement = this.shadowRoot.querySelector(".evento__datos--descripcion");

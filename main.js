@@ -198,7 +198,7 @@ const eventos = [
 // Espera hasta que el DOM esté completamente cargado
 document.addEventListener("DOMContentLoaded", () => {
   const calendarioSemana = document.querySelector("calendario-semana");
-  calendarioSemana.className = "calendario-semana";
+  calendarioSemana.className = "contenedor-calendario";
   //calendarioSemana.dias = 3; // Por defecto vendrán 7
   calendarioSemana.eventos = eventos;
   calendarioSemana.addEventListener('nuevo', e => {

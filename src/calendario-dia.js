@@ -1,8 +1,7 @@
-import attachCssToShadowDom, { generarEventoAleatorio } from "./funciones";
+import attachCssToShadowDom from "./funciones";
 import { attachLinkToShadowDom } from "./funciones";
 
-const template = document.createElement("div");
-template.className = "dia";
+const template = document.createElement("template");
 template.innerHTML = `
   <div class="dia__cabecera">
     <span class="titulo-dia"></span>
@@ -40,7 +39,8 @@ class CalendarioDia extends HTMLElement {
         "stylesheet"
       )
     );
-    this.shadowRoot.appendChild(template.cloneNode(true));
+    this.shadowRoot.getRootNode().host.className="componente-dia";
+    this.shadowRoot.appendChild(template.content.cloneNode(true));
 
     // Elementos
     this.#titulo = this.shadowRoot.querySelector(".titulo-dia");

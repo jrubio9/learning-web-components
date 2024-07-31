@@ -67,11 +67,16 @@ body {
   align-items: center;
 }
 
-.calendario-semana {
+.contenedor-calendario {
   display: flex;
   flex: 1 1 auto;
+  flex-direction: column;
+  overflow-y: hidden;
   overflow-x: scroll;
   padding: 14px 0;
+  width: 100%;
+  background-color: var(--marble-2);
+  border-radius: 10px;
 }
 
 .fila {
