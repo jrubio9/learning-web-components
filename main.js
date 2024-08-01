@@ -199,7 +199,7 @@ const eventos = [
 document.addEventListener("DOMContentLoaded", () => {
   const calendarioSemana = document.querySelector("calendario-semana");
   calendarioSemana.className = "contenedor-calendario";
-  //calendarioSemana.dias = 3; // Por defecto vendrán 7
+  calendarioSemana.dias = 31; // Por defecto vendrán 7
   calendarioSemana.eventos = eventos;
   calendarioSemana.addEventListener('nuevo', e => {
     console.log("evento nuevo!", e.detail);
@@ -207,6 +207,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
   calendarioSemana.addEventListener('click-evento', e => {
     console.log("Click en evento!", e.detail);
+  });
+  
+  const buttonSemana = document.getElementById("btnSemana");
+  buttonSemana.addEventListener("click", () => {
+    cambiarVistaCalendario(false);
+  });
+  
+  const buttonMes = document.getElementById("btnMes");
+  buttonMes.addEventListener("click", () => {
+    cambiarVistaCalendario(true);
   });
 
   // const buttonHoy = document.getElementById("btnHoy");
@@ -252,6 +262,11 @@ const cambiarFechaInicial = (fecha) => {
   const calendarioSemana = document.querySelector("calendario-semana");
   console.log(fecha);
   calendarioSemana.fecha_inicial =new Date(fecha);
+};
+
+const cambiarVistaCalendario = (mes) => {
+  const calendarioSemana = document.querySelector("calendario-semana");
+  calendarioSemana.vista_calendario = mes;
 };
 
 const cambiarDiasMostrados = (dias) => {

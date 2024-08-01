@@ -67,6 +67,21 @@ class CalendarioSemana extends HTMLElement {
     this.render();
   }
 
+  set vista_calendario(valor) {
+    this.#vistaCalendario = valor;
+    console.log("Cambiamos vista");
+    if (valor) {
+      this.#diasContainers.className="mes";
+      this.dias = 31;
+      var currentSelectedDate = this.fecha_inicial;
+      const firstDayOfMonth = new Date(currentSelectedDate.getFullYear(), currentSelectedDate.getMonth(), 1);
+      this.fecha_inicial = firstDayOfMonth;
+    } else {
+      this.#diasContainers.className="semana";
+      this.dias = 7
+    }
+  }
+
   // ===========
   // MÉTODOS
   // ===========
@@ -85,6 +100,12 @@ class CalendarioSemana extends HTMLElement {
 
     while (this.#diasContainers.childNodes.length < necesarios) {
       let componenteDia = document.createElement("calendario-dia");
+      if (this.#vistaCalendario) {
+        componenteDia.className="componente-dia-mes";
+      } else {
+        componenteDia.className="componente-dia";
+      }
+
       this.#diasContainers.appendChild(componenteDia);
     }
 

@@ -1,4 +1,24 @@
 /* ==================== */
+/*  RELATIVO A MES   */
+/* ==================== */
+.mes {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  /*grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); con esto lo hacemos dinámico pero luego los bordes van mal*/
+}
+
+.mes .componente-dia {
+  min-width: 250px;
+  border-top: 1px solid black;
+  border-radius: 0;
+  justify-content: space-between;
+}
+
+.mes .componente-dia:nth-child(-n+5) {
+  border-top: none; /* Quitar borde superior a los primeros 4 elementos (primera fila en un grid de 5 columnas) */
+}
+
+/* ==================== */
 /*  RELATIVO A SEMANA   */
 /* ==================== */
 
@@ -17,10 +37,13 @@
     border-radius: 8px;
     padding: 10px;
     min-width: 400px;
+    min-height: 260px;
     display: flex;
     flex-direction: column;
     overflow-y: hidden;
+    justify-content: flex-start;
 }
+
 .componente-dia:before {
   content: "";
   position: absolute;
