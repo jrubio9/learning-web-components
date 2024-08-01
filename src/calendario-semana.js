@@ -1,9 +1,7 @@
-//import templateStr from './calendario-semana.html';
 import attachCssToShadowDom from "./funciones";
 
 const template = document.createElement("template");
 template.id = "eventos-semana";
-template.classList.add("eventos-semana");
 template.innerHTML = `<div id="dias" class="semana"></div>`;
 
 class CalendarioSemana extends HTMLElement {
@@ -28,7 +26,6 @@ class CalendarioSemana extends HTMLElement {
     // Attach del CSS al Shadow DOM
     shadowRoot.appendChild(attachCssToShadowDom("calendario.css"));
     shadowRoot.appendChild(template.content.cloneNode(true));
-    shadowRoot.getRootNode().host.classList.add("eventos-semana");
 
     this.#diasContainers = shadowRoot.getElementById("dias");
     this.masterRender();
