@@ -197,15 +197,14 @@ const eventos = [
 
 // Espera hasta que el DOM esté completamente cargado
 document.addEventListener("DOMContentLoaded", () => {
-  const calendarioSemana = document.querySelector("calendario-semana");
-  calendarioSemana.className = "contenedor-calendario";
-  calendarioSemana.dias = 31; // Por defecto vendrán 7
-  calendarioSemana.eventos = eventos;
-  calendarioSemana.addEventListener('nuevo', e => {
+  const calendario = document.querySelector("wc-calendario");
+  //calendario.dias = 31; // Por defecto vendrán 7
+  calendario.eventos = eventos;
+  calendario.addEventListener('nuevo', e => {
     console.log("evento nuevo!", e.detail);
   });
 
-  calendarioSemana.addEventListener('click-evento', e => {
+  calendario.addEventListener('click-evento', e => {
     console.log("Click en evento!", e.detail);
   });
   
@@ -219,58 +218,57 @@ document.addEventListener("DOMContentLoaded", () => {
     cambiarVistaCalendario(true);
   });
 
-  // const buttonHoy = document.getElementById("btnHoy");
-  // buttonHoy.addEventListener("click", () => {
-  //   cambiarFechaInicial(new Date());
-  // });
+  const buttonHoy = document.getElementById("btnHoy");
+  buttonHoy.addEventListener("click", () => {
+    cambiarFechaInicial(new Date());
+  });
 
-  // const btnFlechaLeft = document.getElementById("btnFlechaLeft");
-  // btnFlechaLeft.addEventListener("click", () => {
-  //   var fecha = calendarioSemana.getFechaInicial();
-  //   console.log("fechaInicial", fecha);
-  //   fecha.setDate(fecha.getDate() - 7);
-  //   console.log("NuevaFecha", fecha);
-  //   calendarioSemana.fecha_inicial = fecha;
-  // });
+  const btnFlechaLeft = document.getElementById("btnFlechaLeft");
+  btnFlechaLeft.addEventListener("click", () => {
+    var fecha = calendario.fechaInicial;
+    fecha.setDate(fecha.getDate() - 7);
+    calendario.fechaInicial = fecha;
+  });
 
-  // const btnFlechaRight = document.getElementById("btnFlechaRight");
-  // btnFlechaLeft.addEventListener("click", () => {
-  //   var fecha = calendarioSemana.getFechaInicial();
-  //   fecha.setDate(fecha.getDate() + 7);
-  //   calendarioSemana.fecha_inicial =fecha;
-  // });
+  const btnFlechaRight = document.getElementById("btnFlechaRight");
+  btnFlechaRight.addEventListener("click", () => {
+    var fecha = calendario.fechaInicial;
+    fecha.setDate(fecha.getDate() + 7);
+    calendario.fechaInicial = fecha;
+  });
+
   // btnFlechaRight.addEventListener("click", () => {
   //   cambiarFechaInicial(inputFecha.value);
   // });
 
 
-  // const inputFecha = document.getElementById("finicio");
-  // inputFecha.addEventListener("change", () => {
-  //   cambiarFechaInicial(inputFecha.value);
-  // });
+  const inputFecha = document.getElementById("finicio");
+  inputFecha.addEventListener("change", () => {
+    cambiarFechaInicial(inputFecha.value);
+  });
 
-  // const inputDias = document.getElementById("diasMostrar");
-  // inputDias.addEventListener("change", () => {
-  //   cambiarDiasMostrados(inputDias.value);
-  // });
+  const inputDias = document.getElementById("diasMostrar");
+  inputDias.addEventListener("change", () => {
+    cambiarDiasMostrados(inputDias.value);
+  });
 
 
 });
 
 const cambiarFechaInicial = (fecha) => {
   if (!fecha) return;
-  const calendarioSemana = document.querySelector("calendario-semana");
+  const calendario = document.querySelector("wc-calendario");
   console.log(fecha);
-  calendarioSemana.fecha_inicial =new Date(fecha);
+  calendario.fechaInicial = new Date(fecha);
 };
 
 const cambiarVistaCalendario = (mes) => {
-  const calendarioSemana = document.querySelector("calendario-semana");
-  calendarioSemana.vista_calendario = mes;
+  const calendario = document.querySelector("wc-calendario");
+  calendario.vistaMes = mes;
 };
 
 const cambiarDiasMostrados = (dias) => {
   if (!dias) return;
-  const calendarioSemana = document.querySelector("calendario-semana");
-  calendarioSemana.dias = parseInt(dias);
+  const calendario = document.querySelector("wc-calendario");
+  calendario.dias = parseInt(dias);
 };
