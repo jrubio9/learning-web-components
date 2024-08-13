@@ -76,12 +76,10 @@ class CalendarioEvento extends HTMLElement {
     #eventoElement;
     #datos;
     #vista;
-    //#estilosDefecto;
     #estilos;
 
     constructor() {
         super();
-        //this.#estilosDefecto = templateStr;
         this.#datos = null;
         this.#vista = "";
         this.#estilos = estilos;

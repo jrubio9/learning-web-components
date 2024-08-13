@@ -58,6 +58,18 @@ body {
   overflow: hidden;
 }
 
+.card {
+  position: absolute;
+  inset: 5px;
+  display: flex;
+  width: 100%;
+  flex: 1 1 auto;
+  background-color: var(--marble-2);
+  padding: 8px 12px;
+  gap: 10px;
+  border-radius: 6px;
+}
+
 .header {
   background-color: var(--marble-2);
   padding: 8px 12px;
