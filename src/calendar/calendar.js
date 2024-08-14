@@ -1,4 +1,4 @@
-import "../../style.css";
+import "../..//calendario.css";
 
 const eventos = [
   {
@@ -201,8 +201,7 @@ let dateFecha = new Intl.DateTimeFormat("es-ES", {
   day: "2-digit",
 });
 
-// Espera hasta que el DOM esté completamente cargado
-document.addEventListener("DOMContentLoaded", () => {
+function Calendario() {
   const calendario = document.querySelector("wc-calendario");
   //calendario.dias = 31; // Por defecto vendrán 7
   calendario.eventos = eventos;
@@ -294,5 +293,17 @@ document.addEventListener("DOMContentLoaded", () => {
     fechaInicial = formatearFecha(calendario.range_start);
     fechaFinal = formatearFecha(calendario.range_end);
   };
+  
+  console.log("Calendar init");
+}
+
+export const modelo = new Calendario();
+
+
+// Espera hasta que el DOM esté completamente cargado
+document.addEventListener("calendarioCreado", () => {
+  console.log("creado");
+
 });
 
+console.log("Calendar module loaded");

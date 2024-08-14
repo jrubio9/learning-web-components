@@ -4,21 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Web Components</title>
+    <meta name="description" content="">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="/images/logo.svg">
+
+    <link rel="stylesheet" href="/calendario.css">
+    <link rel="stylesheet" href="/style.css">
+
+    <script type="module" src="src/calendar/wc-evento.js"></script>
+    <script type="module" src="src/calendar/wc-calendario-dia.js"></script>
+    <script type="module" src="src/calendar/wc-calendario.js"></script>
+
 
     <script type="module" src="src/kanban/wc-kanban-group.js"></script>
     <script type="module" src="src/kanban/wc-kanban-column.js"></script>
     <script type="module" src="src/kanban/wc-kanban.js"></script>
 </head>
 <body>
-    <div class="card">
-        <a href="src/calendar/">Calendar</a>
-        <a href="/kanban/">Kanban</a>
-        <wc-kanban class="wc-kanban"></wc-kanban>
-    </div>
-
-    <script type="module" src="/main.js"></script>
+    <nav>
+        <a href="/">Home</a>
+        <a href="#calendar">Calendar</a>
+        <a href="#kanban">Kanban</a>
+    </nav>
+    <div id="content"></div>
+    <script src="src/router.js"></script>
 </body>
 </html>

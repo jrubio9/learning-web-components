@@ -1,39 +1,40 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calendario</title>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet">
-    <link rel="icon" type="image/x-icon" href="../../public/logo.svg">
-    <script type="module" src="./wc-evento.js"></script>
-    <script type="module" src="./wc-calendario-dia.js"></script>
-    <script type="module" src="./wc-calendario.js"></script>
-</head>
-<body>
-    <div class="header">
-        <span>Planificador</span>
-        <div class="fila">
+<div class="header">
+  <span>Calendario</span>
+  <div class="fila">
+    <button
+      id="btnFlechaLeft"
+      style="width: 30px; height: 30px; align-self: center; margin-top: 5px"
+    >
+      &laquo;
+    </button>
+    <button id="btnHoy" style="width: 60px; height: 45px; align-self: flex-end">
+      Hoy
+    </button>
+    <button
+      id="btnFlechaRight"
+      style="width: 30px; height: 30px; align-self: center; margin-top: 5px"
+    >
+      &raquo;
+    </button>
 
-            <button id="btnFlechaLeft" style="width: 30px;height: 30px; align-self: center; margin-top: 5px">&laquo;</button>
-            <button id="btnHoy" style="width: 60px;height: 45px; align-self: flex-end;">Hoy</button>
-            <button id="btnFlechaRight" style="width: 30px;height: 30px; align-self: center; margin-top: 5px">&raquo;</button>
-            
-            <div class="grupo-col">
-                <label for="finicio">Fecha Inicio:</label>
-                <input type="date" id="finicio" name="Fecha Inicio">
-            </div>
-            <div class="grupo-col">
-                <label for="diasMostrar">Días a mostrar:</label>
-                <input type="number" id="diasMostrar" name="Días a mostrar">
-            </div>
-
-            <button id="btnSemana" style="width: 60px;height: 45px; align-self: flex-end;">Semana</button>
-            <button id="btnMes" style="width: 60px;height: 45px; align-self: flex-end;">Mes</button>
-        </div>
+    <div class="grupo-col">
+      <label for="finicio">Fecha Inicio:</label>
+      <input type="date" id="finicio" name="Fecha Inicio" />
     </div>
-    <wc-calendario></wc-calendario>
-    <script type="module" src="./calendar.js"></script>
-</body>
-</html>
+    <div class="grupo-col">
+      <label for="diasMostrar">Días a mostrar:</label>
+      <input type="number" id="diasMostrar" name="Días a mostrar" />
+    </div>
+
+    <button
+      id="btnSemana"
+      style="width: 60px; height: 45px; align-self: flex-end"
+    >
+      Semana
+    </button>
+    <button id="btnMes" style="width: 60px; height: 45px; align-self: flex-end">
+      Mes
+    </button>
+  </div>
+</div>
+<wc-calendario class="wc-calendario"></wc-calendario>
