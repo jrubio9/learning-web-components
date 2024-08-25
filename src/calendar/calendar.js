@@ -293,17 +293,7 @@ function Calendario() {
     fechaInicial = formatearFecha(calendario.range_start);
     fechaFinal = formatearFecha(calendario.range_end);
   };
-  
-  console.log("Calendar init");
+
 }
 
 export const modelo = new Calendario();
-
-
-// Espera hasta que el DOM esté completamente cargado
-document.addEventListener("calendarioCreado", () => {
-  console.log("creado");
-
-});
-
-console.log("Calendar module loaded");

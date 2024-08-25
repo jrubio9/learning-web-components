@@ -8,10 +8,6 @@ template.innerHTML = `
 }
 </style>
 `;
-/*
-<div id="kanban" class="kanban-board"></div>
-*/
-
 
 class Kanban extends HTMLElement {
 
@@ -32,23 +28,20 @@ class Kanban extends HTMLElement {
     }
 
     set columnsStructure(data) {
-        console.log("SetColumnStructure", data);
+        console.log("Kanban - Set column structure");
         if (data === undefined || this.#columnsStructure === data) return;
         this.#columnsStructure = data;
-        this.render();
     }
 
     set cards(data) {
-        console.log("SetCards");
+        console.log("Kanban - SetCards");
         if (data === undefined || this.#cards === data) return;
         this.#cards = data;
         this.render();
     }
 
-
     renderColumns() {
         let necesarios = this.#columnsStructure.length;
-        console.log("Columnas necesarias", necesarios);
         const shadowRoot = this.shadowRoot;
         while (this.shadowRoot.childNodes.length > necesarios) {
             this.shadowRoot.removeChild(this.shadowRoot.firstChild);
@@ -56,7 +49,7 @@ class Kanban extends HTMLElement {
 
         while (this.shadowRoot.childNodes.length < necesarios) {
             let columnaKanban = document.createElement("wc-kanban-column");
-            //columnaKanban.classList.add("wc-kanban-columna");
+            columnaKanban.classList.add("wc-kanban-column");
             this.shadowRoot.appendChild(columnaKanban);
         }
         return this.shadowRoot.childNodes;
@@ -65,9 +58,8 @@ class Kanban extends HTMLElement {
     render() {
         console.log("Render kanban");
         const renderedColumns = this.renderColumns();
-        console.log("Columnas", renderedColumns);
         renderedColumns.forEach((renderedCol, index) => {
-            console.log("Columna", renderedCol, "group", this.#columnsStructure[index]);
+            console.log("wc-column structure", this.#columnsStructure[index]);
             renderedCol.groups = this.#columnsStructure[index]; // List<InfoGroup>
             renderedCol.cards = this.#cards;
         });

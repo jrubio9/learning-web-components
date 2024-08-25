@@ -5,18 +5,26 @@ template.innerHTML = `
     display: flex;
     flex: 1 1 auto;
     gap: 15px;
+    max-width: 350px;
+}
+
+.groups {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    
 }
 </style>
 <div class="groups"></div>
 `;
 
-
 class KanbanColumn extends HTMLElement {
-    
     #groups;
     #cards;
-
     #groupsContainer;
+
 
     constructor() {
         super();
@@ -31,30 +39,45 @@ class KanbanColumn extends HTMLElement {
     }
 
     set groups(data) {
+        if (!data || data === this.#groups) {
+            return;
+        }
+        console.log("Kanban Columns - Set groups");
         this.#groups = data;
         this.render();
     }
-
+    
     set cards(data) {
+        if (!data || data === this.#cards) {
+            return;
+        }
+        console.log("Kanban Columns - Set cards");
         this.#cards = data;
         this.render();
     }
 
-  renderColumnGroups(needed) {
-    while (this.#groupsContainer.childNodes.length > needed) {
-      this.#groupsContainer.removeChild(this.shadowRoot.firstChild);
-    }
+    renderColumnGroups(needed) {
+        while (this.#groupsContainer.childNodes.length > needed - 1) {
+            this.#groupsContainer.removeChild(this.#groupsContainer.lastChild);
+        }
 
-    while (this.#groupsContainer.childNodes.length < needed) {
-      let card = document.createElement("wc-kanban-group");
-      this.#groupsContainer.appendChild(card);
+        while (this.#groupsContainer.childNodes.length < needed) {
+            let kanbanGroup = document.createElement("wc-kanban-group");
+            this.#groupsContainer.appendChild(kanbanGroup);
+        }
+        return this.#groupsContainer.childNodes;
     }
-    return this.shadowRoot.childNodes;
-  }
 
     render() {
-        console.log("Render groups", this.#groups.length);
-        this.renderColumnGroups(this.#groups.length);
+        var estructuraGrupos = this.#groups.groups;
+        var groups = this.renderColumnGroups(estructuraGrupos.length);
+        groups.forEach((renderGroup, index) => {
+            var grupo = estructuraGrupos[index];
+            renderGroup.groupId = grupo.id;
+            renderGroup.title = grupo.title;
+            renderGroup.cards = this.#cards;
+            renderGroup.titleColor = grupo.customTitleColor;
+        });
     }
 }
 customElements.define("wc-kanban-column", KanbanColumn);

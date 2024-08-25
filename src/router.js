@@ -46,7 +46,6 @@ const locationHandler = async () => {
 
     // Load the script if it exists
     if (route.script) {
-        console.log("Hay script");
         await route.script();
         dispatchEvent(new Event(location + "Creado"));
     }

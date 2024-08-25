@@ -1,10 +1,32 @@
 
 const cards = [
     {
+        groupId: 1,
         title: "9999AAA",
         desc: "Volkswagen Sciro G",
     },
     {
+        groupId: 1,
+        title: "9999AAA",
+        desc: "Volkswagen Sciro G",
+    },
+    {
+        groupId: 2,
+        title: "9999BBB",
+        desc: "Honda Civic",
+    },
+    {
+        groupId: 2,
+        title: "9999BBB",
+        desc: "Honda Civic",
+    },
+    {
+        groupId: 2,
+        title: "9999BBB",
+        desc: "Honda Civic",
+    },
+    {
+        groupId: 3,
         title: "9999BBB",
         desc: "Honda Civic",
     },
@@ -14,26 +36,24 @@ const columnEstructure = [
     {
         groups: [
             {
+                id: 1,
                 title: "Entradas",
-                editable: true,
-                customBgColor: "#FF0000",
-                customTitleColor: "#FFFFFF",
+                editable: true
             }
         ],
     },
     {
         groups: [
             {
+                id: 2,
                 title: "En curso con incidencias",
                 editable: false,
-                customBgColor: "#FF0000",
-                customTitleColor: "#FFFFFF",
+                customTitleColor: "#FF0000",
             },
             {
+                id: 3,
                 title: "En curso",
-                editable: false,
-                customBgColor: "#00FF00",
-                customTitleColor: "#FFFFFF",
+                editable: false
             },
         ],
     },
@@ -41,10 +61,8 @@ const columnEstructure = [
 
 function Kanban() {
     const kanban = document.querySelector("wc-kanban");
-    console.log(columnEstructure.length);
     kanban.columnsStructure = columnEstructure;
     kanban.cards = cards;
 }
 
-
-console.log("Kanban module loaded");
+export const modelo = new Kanban();
