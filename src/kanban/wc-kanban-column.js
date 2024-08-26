@@ -14,7 +14,7 @@ template.innerHTML = `
     flex-direction: column;
     gap: 15px;
     width: 100%;
-    
+    height: min-content;
 }
 </style>
 <div class="groups"></div>
@@ -73,10 +73,8 @@ class KanbanColumn extends HTMLElement {
         var groups = this.renderColumnGroups(estructuraGrupos.length);
         groups.forEach((renderGroup, index) => {
             var grupo = estructuraGrupos[index];
-            renderGroup.groupId = grupo.id;
-            renderGroup.title = grupo.title;
+            renderGroup.group = grupo;
             renderGroup.cards = this.#cards;
-            renderGroup.titleColor = grupo.customTitleColor;
         });
     }
 }

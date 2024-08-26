@@ -47,6 +47,7 @@ const locationHandler = async () => {
     // Load the script if it exists
     if (route.script) {
         await route.script();
+        console.log("Ejecutamos el script");
         dispatchEvent(new Event(location + "Creado"));
     }
 

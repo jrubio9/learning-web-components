@@ -5,19 +5,53 @@ template.innerHTML = `
     display: flex;
     flex: 1 1 auto;
     gap: 15px;
+    height: 100%;
+}
+
+:host(.last-column) {
+    display: flex;
+    flex-wrap: no-wrap;
+    align-items: center;
+    justify-content: center;
+    min-width: 250px;
+    width: min-content;
+    height: min-content;
+    background-color: var(--marble-2);
+    border: 1px solid var(--periwinkle-light);
+    border-radius: 8px;
+    cursor: pointer;
 }
 </style>
 `;
 
 class Kanban extends HTMLElement {
-
     #columnsStructure;
     #cards;
+
+    #lastColumnElement;
 
     constructor() {
         super();
         this.#cards = [];
         this.#columnsStructure = [];
+        let lastCol = document.createElement("div");
+        lastCol.className = "last-column";
+        lastCol.innerHTML = "<span>+ Add column</span>";
+        lastCol.style = `
+            display: flex;
+            flex-wrap: no-wrap;
+            align-items: center;
+            justify-content: center;
+            min-width: 250px;
+            width: min-content;
+            height: min-content;
+            background-color: var(--marble-2);
+            border: 1px solid var(--periwinkle-light);
+            border-radius: 8px;
+            cursor: pointer;
+`;
+
+        this.#lastColumnElement = lastCol;
     }
 
     connectedCallback() {
@@ -43,27 +77,30 @@ class Kanban extends HTMLElement {
     renderColumns() {
         let necesarios = this.#columnsStructure.length;
         const shadowRoot = this.shadowRoot;
-        while (this.shadowRoot.childNodes.length > necesarios) {
-            this.shadowRoot.removeChild(this.shadowRoot.firstChild);
+        shadowRoot.removeChild(shadowRoot.lastChild);
+        while (shadowRoot.childNodes.length > necesarios) {
+            shadowRoot.removeChild(shadowRoot.firstChild);
         }
 
-        while (this.shadowRoot.childNodes.length < necesarios) {
+        while (shadowRoot.childNodes.length < necesarios) {
             let columnaKanban = document.createElement("wc-kanban-column");
             columnaKanban.classList.add("wc-kanban-column");
-            this.shadowRoot.appendChild(columnaKanban);
+            shadowRoot.appendChild(columnaKanban);
         }
-        return this.shadowRoot.childNodes;
+
+        shadowRoot.appendChild(this.#lastColumnElement);
+
+        return shadowRoot.childNodes;
     }
 
     render() {
         console.log("Render kanban");
         const renderedColumns = this.renderColumns();
         renderedColumns.forEach((renderedCol, index) => {
-            console.log("wc-column structure", this.#columnsStructure[index]);
             renderedCol.groups = this.#columnsStructure[index]; // List<InfoGroup>
             renderedCol.cards = this.#cards;
         });
     }
-};
+}
 
 customElements.define("wc-kanban", Kanban);

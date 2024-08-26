@@ -15,15 +15,30 @@ template.innerHTML = `
   .header {
       display: flex;
       justify-content: space-between;
+      align-items: center;
       padding: 6px 8px;
       color: var(--royal-blue);
       font-size: 12px;
       font-weight: 500;
-  }
 
-  .header.info {
-    display: flex;
-    gap: 6px;
+      &.info {
+        display: flex;
+        gap: 6px;
+      }
+
+      .ico {
+        cursor: pointer;
+        font-size: 12px;
+        color: var(--royal-blue);
+
+        &.ascii {
+          font-size: 16px;
+        }
+      }
+    }
+
+  .title {
+    color: var(--titleColor, --royal-blue);
   }
 
   .number {
@@ -37,15 +52,31 @@ template.innerHTML = `
     padding: 0 12px;
   }
 
+  .footer {
+    display: flex;
+    align-items: center;
+    padding: 0 10px 10px 10px;
+    color: var(--slate);
+    font-size: 12px;
+    font-weight: 500;
+    
+    .add {
+      cursor: pointer;
+    }
+  }
+
 </style>
 <div class="header">
     <div class="info">
-        <span id="title"></span>
+        <span class="title" contenteditable="true"></span>
         <span id="cardsNumber" class="number"></span>
     </div>
-    <span class="ico">...</span>
+    <span class="ico ascii">⋮</span>
 </div>
 <div class="cards"></div>
+<div class="footer" style="visibility: var(--add-visibility, 'hidden')">
+    <span class="add">+ Add card</span>
+</div>
 `;
 
 const cardStyles = `
@@ -67,7 +98,7 @@ const cardStyles = `
         box-shadow: rgba(6, 24, 44, 0.08) 0px 0px 0px 2px, rgba(6, 24, 44, 0.25) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
     }
 
-    .principal {
+    .title {
         font-size: 16px;
         color: var(--royal-blue);
         font-weight: 500;
@@ -84,8 +115,7 @@ const cardStyles = `
 `;
 
 class KanbanGroup extends HTMLElement {
-    #groupId;
-    #title;
+    #group;
     #cards;
 
     #titleElement;
@@ -94,8 +124,7 @@ class KanbanGroup extends HTMLElement {
 
     constructor() {
         super();
-        this.#groupId = -1;
-        this.#title = "";
+        this.#group = null;
         this.#cards = [];
     }
 
@@ -103,32 +132,19 @@ class KanbanGroup extends HTMLElement {
         const shadowRoot = this.attachShadow({ mode: "open" });
         shadowRoot.appendChild(template.content.cloneNode(true));
 
-        this.#titleElement = shadowRoot.getElementById("title");
+        this.#titleElement = shadowRoot.querySelector(".title");
         this.#cardsNumberElement = shadowRoot.getElementById("cardsNumber");
         this.#cardsContainer = shadowRoot.querySelector(".cards");
     }
 
-    set groupId(groupId) {
-        if (this.#groupId === groupId) {
+    set group(group) {
+        if (this.#group === group) {
             return;
         }
-        this.#groupId = groupId;
-        console.log("GroupId:", groupId);
-    }
-
-    set title(data) {
-        if (data === this.#title) {
-            return;
-        }
-        console.log("Kanban Group - Set title");
-        this.#title = data.title;
-        this.#titleElement.textContent = data;
-    }
-
-    set titleColor(data) {
-        var customStyle = "color: " + data;
-        this.#titleElement.setAttribute("style", customStyle);
-        this.#titleElement
+        console.log("Kanban Group - Set group");
+        this.#group = group;
+        console.log(group);
+        this.render();
     }
 
     set cards(data) {
@@ -142,13 +158,13 @@ class KanbanGroup extends HTMLElement {
     }
 
     filterGroupCards() {
-        return this.#cards.filter((card) => card.groupId === this.#groupId);
+        return this.#cards.filter((card) => card.groupId === this.#group.id);
     }
 
     getHtmlFromCard(card) {
         return (
             card &&
-            `<span class="principal">${card.title}</span>
+            `<span class="title">${card.title}</span>
             <span class="descripcion">${card.desc}</span>
             <div class="etiquetas">${card.tags ? card.tags : ""}</div>
             `
@@ -169,6 +185,15 @@ class KanbanGroup extends HTMLElement {
     }
 
     render() {
+        this.#titleElement.textContent = this.#group.title;
+        if (this.#group.color && this.#group.color !== "") {
+            this.style.setProperty("--titleColor", this.#group.color);
+        }
+
+        if (this.#group.editable) {
+            this.style.setProperty("--add-visibility", "visible");
+        }
+
         const groupCards = this.filterGroupCards();
         this.#cardsNumberElement.textContent = "(" + groupCards.length + ")";
         let cardsComponents = this.renderCardContainers(groupCards.length);

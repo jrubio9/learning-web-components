@@ -48,7 +48,7 @@ const columnEstructure = [
                 id: 2,
                 title: "En curso con incidencias",
                 editable: false,
-                customTitleColor: "#FF0000",
+                color: "#FF0000",
             },
             {
                 id: 3,
