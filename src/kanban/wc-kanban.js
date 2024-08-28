@@ -7,60 +7,91 @@ template.innerHTML = `
     gap: 15px;
     height: 100%;
 }
-
-:host(.last-column) {
+.columns {
     display: flex;
+    flex: 1 1 auto;
+    gap: 15px;
+}
+.last-column {
+    display: flex;
+    width: 200px;
     flex-wrap: no-wrap;
     align-items: center;
     justify-content: center;
-    min-width: 250px;
-    width: min-content;
     height: min-content;
-    background-color: var(--marble-2);
     border: 1px solid var(--periwinkle-light);
     border-radius: 8px;
+    padding: 6px 2px;
     cursor: pointer;
+
+    &:hover {
+        background-color: var(--marble-2);
+    }
+
+    & span {
+        font-size: 12px;
+        color: var(--slate);
+        font-weight: 500;
+    }    
 }
 </style>
+
+<div class="columns"></div>
+<div class="last-column">
+    <span>+ Add column</span>
+</div>
 `;
 
 class Kanban extends HTMLElement {
     #columnsStructure;
     #cards;
 
-    #lastColumnElement;
+    #columnsElement;
+    #addColumnElement; 
 
     constructor() {
         super();
         this.#cards = [];
         this.#columnsStructure = [];
-        let lastCol = document.createElement("div");
-        lastCol.className = "last-column";
-        lastCol.innerHTML = "<span>+ Add column</span>";
-        lastCol.style = `
-            display: flex;
-            flex-wrap: no-wrap;
-            align-items: center;
-            justify-content: center;
-            min-width: 250px;
-            width: min-content;
-            height: min-content;
-            background-color: var(--marble-2);
-            border: 1px solid var(--periwinkle-light);
-            border-radius: 8px;
-            cursor: pointer;
-`;
-
-        this.#lastColumnElement = lastCol;
     }
 
     connectedCallback() {
         const shadowRoot = this.attachShadow({ mode: "open" });
         shadowRoot.appendChild(template.content.cloneNode(true));
+        this.#columnsElement = this.shadowRoot.querySelector(".columns");
+        this.#addColumnElement = this.shadowRoot.querySelector(".last-column");
 
+        this.#addColumnElement.addEventListener("click", () => this.clickAddColumn());
         this.render();
     }
 
+    clickAddColumn() {
+        let columnaKanban = document.createElement("wc-kanban-column");
+        columnaKanban.classList.add("wc-kanban-column");
+        this.#columnsElement.appendChild(columnaKanban);
+        var newGroup = this.getNewGroup();
+        columnaKanban.groups = {groups: [newGroup]};
+    }
+
+    getNewGroup() {
+        if (!this.#columnsStructure || !this.#columnsStructure[this.#columnsStructure.length - 1].groups) {
+            return {
+                id: 1,
+                title: "New Group",
+                editable: true
+            }
+        } 
+        var lastColumnGroups = this.#columnsStructure[this.#columnsStructure.length - 1].groups;
+        var nextId = lastColumnGroups[lastColumnGroups.length - 1].id;
+        console.log(nextId);
+
+        return {
+            id: nextId + 1,
+            title: "New Group",
+            editable: true
+        }
+    }
+    
     set columnsStructure(data) {
         console.log("Kanban - Set column structure");
         if (data === undefined || this.#columnsStructure === data) return;
@@ -77,20 +108,18 @@ class Kanban extends HTMLElement {
     renderColumns() {
         let necesarios = this.#columnsStructure.length;
         const shadowRoot = this.shadowRoot;
-        shadowRoot.removeChild(shadowRoot.lastChild);
-        while (shadowRoot.childNodes.length > necesarios) {
-            shadowRoot.removeChild(shadowRoot.firstChild);
+        const columns = this.#columnsElement;
+        while (columns.childNodes.length > necesarios) {
+            columns.removeChild(columns.firstChild);
         }
 
-        while (shadowRoot.childNodes.length < necesarios) {
+        while (columns.childNodes.length < necesarios) {
             let columnaKanban = document.createElement("wc-kanban-column");
             columnaKanban.classList.add("wc-kanban-column");
-            shadowRoot.appendChild(columnaKanban);
+            columns.appendChild(columnaKanban);
         }
 
-        shadowRoot.appendChild(this.#lastColumnElement);
-
-        return shadowRoot.childNodes;
+        return this.#columnsElement.childNodes;
     }
 
     render() {

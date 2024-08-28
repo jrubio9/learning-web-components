@@ -3,6 +3,7 @@ template.innerHTML = `
 <style>
 :host {
     display: flex;
+    flex-direction: column;
     flex: 1 1 auto;
     gap: 15px;
     max-width: 350px;
@@ -10,14 +11,41 @@ template.innerHTML = `
 
 .groups {
     display: flex;
-    flex: 1 1 auto;
     flex-direction: column;
     gap: 15px;
     width: 100%;
     height: min-content;
 }
+
+.add-group {
+    display: flex;
+    align-self: center;
+    width: 100%;
+    flex-wrap: no-wrap;
+    align-items: center;
+    justify-content: center;
+    height: min-content;
+    border: 1px solid var(--periwinkle-light);
+    border-radius: 8px;
+    padding: 6px 2px;
+    cursor: pointer;
+
+    &:hover {
+        background-color: var(--marble-2);
+    }
+
+    & span {
+        font-size: 12px;
+        color: var(--slate);
+        font-weight: 500;
+    }    
+}
+
 </style>
 <div class="groups"></div>
+<div class="add-group">
+    <span>+ Add group</span>
+</div>
 `;
 
 class KanbanColumn extends HTMLElement {
@@ -69,6 +97,7 @@ class KanbanColumn extends HTMLElement {
     }
 
     render() {
+        console.log("render groups", this.#groups);
         var estructuraGrupos = this.#groups.groups;
         var groups = this.renderColumnGroups(estructuraGrupos.length);
         groups.forEach((renderGroup, index) => {

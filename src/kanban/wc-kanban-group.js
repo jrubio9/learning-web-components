@@ -121,6 +121,7 @@ class KanbanGroup extends HTMLElement {
     #titleElement;
     #cardsNumberElement;
     #cardsContainer;
+    #addCardContainer;
 
     constructor() {
         super();
@@ -135,7 +136,26 @@ class KanbanGroup extends HTMLElement {
         this.#titleElement = shadowRoot.querySelector(".title");
         this.#cardsNumberElement = shadowRoot.getElementById("cardsNumber");
         this.#cardsContainer = shadowRoot.querySelector(".cards");
+        this.#addCardContainer = shadowRoot.querySelector(".add");
+
+
+        this.#addCardContainer.addEventListener("click", () => this.clickAddCard());
+
     }
+
+    clickAddCard() {
+        let newCard = document.createElement("wc-card");
+        newCard.classList.add("wc-card");
+        newCard.estilos = cardStyles;
+        this.#cardsContainer.appendChild(newCard);
+        let card = {
+            groupId: this.#group.id,
+            title: "Click to edit this card",
+            desc: "Test text as description",
+        }; 
+        
+        newCard.vista = this.getHtmlFromCard(card);
+    }    
 
     set group(group) {
         if (this.#group === group) {
