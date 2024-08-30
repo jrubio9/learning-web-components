@@ -1,32 +1,37 @@
-
 const cards = [
     {
-        groupId: 1,
+        id: 0,
+        groupId: 0,
         title: "9999AAA",
         desc: "Volkswagen Sciro G",
     },
     {
-        groupId: 1,
+        id: 1,
+        groupId: 0,
         title: "9999AAA",
         desc: "Volkswagen Sciro G",
     },
     {
-        groupId: 2,
+        id: 2,
+        groupId: 1,
         title: "9999BBB",
         desc: "Honda Civic",
     },
     {
-        groupId: 2,
+        id: 3,
+        groupId: 1,
         title: "9999BBB",
         desc: "Honda Civic",
     },
     {
-        groupId: 2,
+        id: 4,
+        groupId: 1,
         title: "9999BBB",
         desc: "Honda Civic",
     },
     {
-        groupId: 3,
+        id: 5,
+        groupId: 2,
         title: "9999BBB",
         desc: "Honda Civic",
     },
@@ -36,24 +41,30 @@ const columnEstructure = [
     {
         groups: [
             {
-                id: 1,
+                id: 0,
                 title: "Entradas",
-                editable: true
+                classList: "",
+                editable: true,
+                incidencias: false
             }
         ],
     },
     {
         groups: [
             {
-                id: 2,
+                id: 1,
                 title: "En curso con incidencias",
+                classList: "disabled;incidencias",
                 editable: false,
                 color: "#FF0000",
+                incidencias: true,
             },
             {
-                id: 3,
+                id: 2,
                 title: "En curso",
-                editable: false
+                classList: "disabled",
+                editable: false,
+                incidencias: false
             },
         ],
     },

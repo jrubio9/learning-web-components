@@ -5,15 +5,15 @@ template.innerHTML = `
     display: flex;
     flex-direction: column;
     flex: 1 1 auto;
-    gap: 15px;
+    gap: 10px;
     max-width: 350px;
 }
 
 .groups {
     display: flex;
     flex-direction: column;
-    gap: 15px;
     width: 100%;
+    gap: 15px;
     height: min-content;
 }
 
@@ -36,7 +36,7 @@ template.innerHTML = `
 
     & span {
         font-size: 12px;
-        color: var(--slate);
+        color: var(--steel);
         font-weight: 500;
     }    
 }
@@ -49,62 +49,140 @@ template.innerHTML = `
 `;
 
 class KanbanColumn extends HTMLElement {
-    #groups;
-    #cards;
-    #groupsContainer;
+  #groups;
+  #cards;
+  #id;
 
+  #groupsContainer;
+  #addGroupElement;
 
-    constructor() {
-        super();
-        this.#cards = [];
-        this.#groups = [];
+  constructor() {
+    super();
+    this.#cards = [];
+    this.#groups = [];
+    this.#id = null;
+  }
+
+  connectedCallback() {
+    const shadowRoot = this.attachShadow({ mode: "open" });
+    shadowRoot.appendChild(template.content.cloneNode(true));
+    this.#groupsContainer = shadowRoot.querySelector(".groups");
+    this.#addGroupElement = shadowRoot.querySelector(".add-group");
+
+    this.#addGroupElement.addEventListener("click", () => this.clickAddGroup());
+
+  }
+
+  // ===========
+  // GETS / SETS
+  // ===========
+
+  set groups(data) {
+    if (!data || JSON.stringify(data) === JSON.stringify(this.#groups)) {
+      return;
+    }
+    console.log("Kanban Columns - Set groups");
+    this.#groups = data;
+    this.render();
+  }
+
+  set cards(data) {
+    console.log("Kanban Columns - Set cards in column " + this.#id);
+    if (JSON.stringify(data) === JSON.stringify(this.#cards)) {
+      return;
+    }
+    console.log("Kanban Columns - Set cards");
+    this.#cards = data;
+    this.render();
+  }
+
+  set id(data) {
+    if (data === this.#id) {
+      return;
+    }
+    console.log("Kanban Columns - Set columnId", data);
+    this.#id = data;
+  }
+
+  clickAddGroup() {
+    var newGroup = this.getNewGroup();
+    console.log("groups", this.#groups);
+    this.#groups[this.#id].groups.push(newGroup);
+    this.render();
+  }
+
+  highestGroupId() {
+    return Math.max(
+      ...this.#groups
+        .flatMap((column) => column.groups)
+        .map((group) => group.id)
+    );
+  }
+
+  getNewGroup() {
+    if (!this.#groups) {
+      return {
+        id: 1,
+        title: "New Group",
+        classList: "",
+        editable: true,
+        incidencias: false,
+      };
+    }
+    var currentId = this.highestGroupId();
+
+    return {
+      id: currentId + 1,
+      title: "New Group",
+      editable: true,
+      incidencias: false,
+    };
+  }
+
+  // ===========
+  //     AUX
+  // ===========
+
+  actualizarCard(eventArgs) {
+    console.log("Se llama actualizarCard de la columna: " + this.#id);
+    this.#groupsContainer.childNodes.forEach((group) => {
+      group.actualizarCard(eventArgs);
+    });
+  }
+
+  // ===========
+  //   RENDER
+  // ===========
+
+  renderColumnGroups(needed) {
+    while (this.#groupsContainer.childNodes.length > needed - 1) {
+      this.#groupsContainer.removeChild(this.#groupsContainer.lastChild);
     }
 
-    connectedCallback() {
-        const shadowRoot = this.attachShadow({ mode: "open" });
-        shadowRoot.appendChild(template.content.cloneNode(true));
-        this.#groupsContainer = shadowRoot.querySelector(".groups");
+    while (this.#groupsContainer.childNodes.length < needed) {
+      let kanbanGroup = document.createElement("wc-kanban-group");
+      this.#groupsContainer.appendChild(kanbanGroup);
+    }
+    return this.#groupsContainer.childNodes;
+  }
+
+  render() {
+    console.log("Kanban - Render column " + this.#id);
+    var estructuraGrupos = this.#groups[this.#id].groups;
+    if (estructuraGrupos.length === 0) {
+      this.#groups[this.#id].groups.push(this.getNewGroup());
     }
 
-    set groups(data) {
-        if (!data || data === this.#groups) {
-            return;
-        }
-        console.log("Kanban Columns - Set groups");
-        this.#groups = data;
-        this.render();
-    }
-    
-    set cards(data) {
-        if (!data || data === this.#cards) {
-            return;
-        }
-        console.log("Kanban Columns - Set cards");
-        this.#cards = data;
-        this.render();
-    }
+    var groups = this.renderColumnGroups(estructuraGrupos.length);
+    groups.forEach((renderGroup, index) => {
+      var grupo = estructuraGrupos[index];
+      renderGroup.group = grupo;
+      renderGroup.cards = this.#cards;
 
-    renderColumnGroups(needed) {
-        while (this.#groupsContainer.childNodes.length > needed - 1) {
-            this.#groupsContainer.removeChild(this.#groupsContainer.lastChild);
-        }
-
-        while (this.#groupsContainer.childNodes.length < needed) {
-            let kanbanGroup = document.createElement("wc-kanban-group");
-            this.#groupsContainer.appendChild(kanbanGroup);
-        }
-        return this.#groupsContainer.childNodes;
-    }
-
-    render() {
-        console.log("render groups", this.#groups);
-        var estructuraGrupos = this.#groups.groups;
-        var groups = this.renderColumnGroups(estructuraGrupos.length);
-        groups.forEach((renderGroup, index) => {
-            var grupo = estructuraGrupos[index];
-            renderGroup.group = grupo;
-            renderGroup.cards = this.#cards;
-        });
-    }
+      if (grupo.classList) {
+        renderGroup.classList.add(grupo.classList);
+      }
+    });
+  }
 }
 customElements.define("wc-kanban-column", KanbanColumn);

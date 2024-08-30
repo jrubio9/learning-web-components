@@ -43,93 +43,97 @@ template.innerHTML = `
 `;
 
 class Kanban extends HTMLElement {
-    #columnsStructure;
-    #cards;
+  #columnsStructure;
+  #cards;
 
-    #columnsElement;
-    #addColumnElement; 
+  #columnsElement;
+  #addColumnElement;
 
-    constructor() {
-        super();
-        this.#cards = [];
-        this.#columnsStructure = [];
+  constructor() {
+    super();
+    this.#cards = [];
+    this.#columnsStructure = [];
+  }
+
+  connectedCallback() {
+    const shadowRoot = this.attachShadow({ mode: "open" });
+    shadowRoot.appendChild(template.content.cloneNode(true));
+    this.#columnsElement = this.shadowRoot.querySelector(".columns");
+    this.#addColumnElement = this.shadowRoot.querySelector(".last-column");
+
+    this.#addColumnElement.addEventListener("click", () =>
+      this.clickAddColumn()
+    );
+    this.render();
+
+    // Este listener escuchará cambios y llamará al método de actualizarCard, que pasará la información a todas las columnas
+    // y estas a todos los grupos, y estos comprobaran si tienen la tarjeta y qué tienen que hacer con ella (eliminarla, añadirla o cambiar su estado).
+    this.shadowRoot.addEventListener("card-changed", (e) =>
+      this.actualizarCard(e)
+    );
+  }
+
+  clickAddColumn() {
+    let columnaKanban = document.createElement("wc-kanban-column");
+    columnaKanban.classList.add("wc-kanban-column");
+    columnaKanban.id = this.#columnsElement.childNodes.length;
+    this.#columnsElement.appendChild(columnaKanban);
+    this.#columnsStructure.push({ groups: [] });
+    columnaKanban.groups = this.#columnsStructure;
+  }
+
+  // ===========
+  // GETS / SETS
+  // ===========
+
+  set columnsStructure(data) {
+    if (data === undefined || this.#columnsStructure === data) return;
+    this.#columnsStructure = data;
+  }
+
+  set cards(data) {
+    if (data === undefined || this.#cards === data) return;
+    this.#cards = data;
+    this.render();
+  }
+
+  // ===========
+  //   RENDER
+  // ===========
+
+  renderColumns() {
+    let necesarios = this.#columnsStructure.length;
+    const columns = this.#columnsElement;
+    while (columns.childNodes.length > necesarios) {
+      columns.removeChild(columns.firstChild);
     }
 
-    connectedCallback() {
-        const shadowRoot = this.attachShadow({ mode: "open" });
-        shadowRoot.appendChild(template.content.cloneNode(true));
-        this.#columnsElement = this.shadowRoot.querySelector(".columns");
-        this.#addColumnElement = this.shadowRoot.querySelector(".last-column");
-
-        this.#addColumnElement.addEventListener("click", () => this.clickAddColumn());
-        this.render();
+    while (columns.childNodes.length < necesarios) {
+      let columnaKanban = document.createElement("wc-kanban-column");
+      columnaKanban.classList.add("wc-kanban-column");
+      columns.appendChild(columnaKanban);
     }
 
-    clickAddColumn() {
-        let columnaKanban = document.createElement("wc-kanban-column");
-        columnaKanban.classList.add("wc-kanban-column");
-        this.#columnsElement.appendChild(columnaKanban);
-        var newGroup = this.getNewGroup();
-        columnaKanban.groups = {groups: [newGroup]};
-    }
+    return this.#columnsElement.childNodes;
+  }
 
-    getNewGroup() {
-        if (!this.#columnsStructure || !this.#columnsStructure[this.#columnsStructure.length - 1].groups) {
-            return {
-                id: 1,
-                title: "New Group",
-                editable: true
-            }
-        } 
-        var lastColumnGroups = this.#columnsStructure[this.#columnsStructure.length - 1].groups;
-        var nextId = lastColumnGroups[lastColumnGroups.length - 1].id;
-        console.log(nextId);
+  render() {
+    const renderedColumns = this.renderColumns();
+    renderedColumns.forEach((renderedCol, index) => {
+      renderedCol.id = index;
+      renderedCol.groups = this.#columnsStructure; // List<InfoGroup>
+      renderedCol.cards = this.#cards;
+    });
+  }
 
-        return {
-            id: nextId + 1,
-            title: "New Group",
-            editable: true
-        }
-    }
-    
-    set columnsStructure(data) {
-        console.log("Kanban - Set column structure");
-        if (data === undefined || this.#columnsStructure === data) return;
-        this.#columnsStructure = data;
-    }
-
-    set cards(data) {
-        console.log("Kanban - SetCards");
-        if (data === undefined || this.#cards === data) return;
-        this.#cards = data;
-        this.render();
-    }
-
-    renderColumns() {
-        let necesarios = this.#columnsStructure.length;
-        const shadowRoot = this.shadowRoot;
-        const columns = this.#columnsElement;
-        while (columns.childNodes.length > necesarios) {
-            columns.removeChild(columns.firstChild);
-        }
-
-        while (columns.childNodes.length < necesarios) {
-            let columnaKanban = document.createElement("wc-kanban-column");
-            columnaKanban.classList.add("wc-kanban-column");
-            columns.appendChild(columnaKanban);
-        }
-
-        return this.#columnsElement.childNodes;
-    }
-
-    render() {
-        console.log("Render kanban");
-        const renderedColumns = this.renderColumns();
-        renderedColumns.forEach((renderedCol, index) => {
-            renderedCol.groups = this.#columnsStructure[index]; // List<InfoGroup>
-            renderedCol.cards = this.#cards;
-        });
-    }
+  actualizarCard(eventArgs) {
+    // const {card, origen, destino, accion } = eventArgs;
+    console.log("Se llama actualizarCard");
+    this.#columnsElement.childNodes.forEach((column) => {
+      console.log(column);
+      column.actualizarCard(eventArgs);
+    });
+  }
 }
 
 customElements.define("wc-kanban", Kanban);

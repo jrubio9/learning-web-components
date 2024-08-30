@@ -293,7 +293,6 @@ function Calendario() {
     fechaInicial = formatearFecha(calendario.range_start);
     fechaFinal = formatearFecha(calendario.range_end);
   };
-
 }
 
 export const modelo = new Calendario();
