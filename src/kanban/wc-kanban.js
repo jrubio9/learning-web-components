@@ -6,6 +6,7 @@ template.innerHTML = `
     flex: 1 1 auto;
     gap: 15px;
     height: 100%;
+    overflow-y: scroll;
 }
 .columns {
     display: flex;
@@ -14,8 +15,9 @@ template.innerHTML = `
 }
 .last-column {
     display: flex;
+    min-width: 180px;
     width: 200px;
-    flex-wrap: no-wrap;
+    flex-wrap: nowrap;
     align-items: center;
     justify-content: center;
     height: min-content;
@@ -128,9 +130,8 @@ class Kanban extends HTMLElement {
 
   actualizarCard(eventArgs) {
     // const {card, origen, destino, accion } = eventArgs;
-    console.log("Se llama actualizarCard");
+    //console.log("Se llama actualizarCard");
     this.#columnsElement.childNodes.forEach((column) => {
-      console.log(column);
       column.actualizarCard(eventArgs);
     });
   }

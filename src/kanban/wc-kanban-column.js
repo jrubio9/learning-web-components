@@ -6,6 +6,7 @@ template.innerHTML = `
     flex-direction: column;
     flex: 1 1 auto;
     gap: 10px;
+    min-width: 300px;
     max-width: 350px;
 }
 
@@ -70,7 +71,6 @@ class KanbanColumn extends HTMLElement {
     this.#addGroupElement = shadowRoot.querySelector(".add-group");
 
     this.#addGroupElement.addEventListener("click", () => this.clickAddGroup());
-
   }
 
   // ===========
@@ -87,7 +87,7 @@ class KanbanColumn extends HTMLElement {
   }
 
   set cards(data) {
-    console.log("Kanban Columns - Set cards in column " + this.#id);
+    //console.log("Kanban Columns - Set cards in column " + this.#id);
     if (JSON.stringify(data) === JSON.stringify(this.#cards)) {
       return;
     }
@@ -100,13 +100,13 @@ class KanbanColumn extends HTMLElement {
     if (data === this.#id) {
       return;
     }
-    console.log("Kanban Columns - Set columnId", data);
+    //console.log("Kanban Columns - Set columnId", data);
     this.#id = data;
   }
 
   clickAddGroup() {
     var newGroup = this.getNewGroup();
-    console.log("groups", this.#groups);
+    //console.log("groups", this.#groups);
     this.#groups[this.#id].groups.push(newGroup);
     this.render();
   }
@@ -144,7 +144,7 @@ class KanbanColumn extends HTMLElement {
   // ===========
 
   actualizarCard(eventArgs) {
-    console.log("Se llama actualizarCard de la columna: " + this.#id);
+    //console.log("Se llama actualizarCard de la columna: " + this.#id);
     this.#groupsContainer.childNodes.forEach((group) => {
       group.actualizarCard(eventArgs);
     });
@@ -167,7 +167,7 @@ class KanbanColumn extends HTMLElement {
   }
 
   render() {
-    console.log("Kanban - Render column " + this.#id);
+    //console.log("Kanban - Render column " + this.#id);
     var estructuraGrupos = this.#groups[this.#id].groups;
     if (estructuraGrupos.length === 0) {
       this.#groups[this.#id].groups.push(this.getNewGroup());

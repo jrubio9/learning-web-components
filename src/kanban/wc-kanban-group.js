@@ -165,9 +165,14 @@ class KanbanGroup extends HTMLElement {
     this.#addCardContainer.addEventListener("click", () => this.clickAddCard());
 
     // When a card is released we need to know where to put it.
-    this.#cardsContainer.addEventListener("drop", (event) => this.handleCardDrop(event));
+    this.#cardsContainer.addEventListener("drop", (event) =>
+      this.handleCardDrop(event)
+    );
     this.#cardsContainer.addEventListener("dragover", this.handleCardDragOver);
-    this.#cardsContainer.addEventListener("dragleave", this.handleCardDragLeave);
+    this.#cardsContainer.addEventListener(
+      "dragleave",
+      this.handleCardDragLeave
+    );
   }
 
   // ===========
@@ -207,7 +212,7 @@ class KanbanGroup extends HTMLElement {
   handleCardDragStart(event) {
     // El contexto de this en este punto es wc-card, no wc-kanban-group.
     const cardId = event.target.getAttribute("id");
-    
+
     event.dataTransfer.setData("text/plain", cardId);
     event.dataTransfer.effectAllowed = "move";
   }
@@ -218,27 +223,37 @@ class KanbanGroup extends HTMLElement {
 
   handleCardDragOver(event) {
     event.preventDefault();
+    const { target, dataTransfer } = event;
+    const cardId = dataTransfer.getData("text/plain");
+    //const card = this.cards.find((card) => card.id === Number(cardId.split("-")[1]));
+    console.log(cardId, target);
+    if (!cardId || this.#cardsContainer.querySelector(`#card-${cardId}`)) {
+      return;
+    }
+    console.log("Drag over");
     event.dataTransfer.dropEffect = "move";
   }
 
   handleCardDragLeave(event) {
     event.preventDefault();
   }
-  
+
   handleCardDrop(event) {
     event.preventDefault();
     console.log("drop", event, document, this); // this es el wc-kanban-group que recibe el objeto
 
     const { dataTransfer } = event;
     const cardId = dataTransfer.getData("text/plain");
-    
+
     // Find the card with the matching cardId
-    const cardIndex = this.#cards.findIndex(card => card.id === Number(cardId));
+    const cardIndex = this.#cards.findIndex(
+      (card) => card.id === Number(cardId.split("-")[1])
+    );
 
     // Save the original column to re-render after we change the card's column.
     if (cardIndex !== -1) {
       const originalGroupId = this.cards[cardIndex].groupId;
-      console.log("Card target", cardId, cardIndex, this.cards[cardIndex]);
+      //console.log("Card target", cardId, cardIndex, this.cards[cardIndex]);
       this.cards[cardIndex].groupId = this.groupId;
 
       this.lanzarActualizacionCard(originalGroupId, this.cards[cardIndex]);
@@ -247,35 +262,48 @@ class KanbanGroup extends HTMLElement {
 
   lanzarActualizacionCard(originalGroup, card) {
     const event = new CustomEvent("card-changed", {
-        detail: {card: card, origen: originalGroup, destino: this.groupId, accion: "move"},
-        bubbles: true,
-        composed: true
+      detail: {
+        card: card,
+        origen: originalGroup,
+        destino: this.groupId,
+        accion: "move",
+      },
+      bubbles: true,
+      composed: true,
     });
     this.shadowRoot.dispatchEvent(event);
-}
+  }
 
+  actualizarCard(eventArgs) {
+    //console.log(eventArgs);
+    const { card, origen, destino, accion } = eventArgs.detail;
 
-actualizarCard(eventArgs) {
-  console.log(eventArgs);
-  const {card, origen, destino, accion } = eventArgs.detail;
-  
-  const groupCards = this.filterGroupCards();
-  const cardIndex = groupCards.findIndex(groupCard => groupCard.id === card.id);
-  if (cardIndex !== -1) {
-    if (destino === this.groupId) {
-      this.addCard(card);
+    if (!card) {
+      return;
     }
-  } else {
-    if (origen !== this.groupId) {
-      this.cards.splice(cardIndex, 1);
-    } else if (destino !== this.groupId) {
-      this.cards.splice(cardIndex, 1);
+
+    const groupCards = this.filterGroupCards();
+    const cardGroupIndex = groupCards.findIndex(
+      (groupCard) => groupCard.id === card.id
+    );
+    const cardIndex = this.#cards.findIndex((card) => card.id === card.id);
+
+    if (accion === "update") {
     } else {
-      this.cards[cardIndex] = card;
+      if (cardIndex !== -1 && destino === this.groupId) {
+        // ADD
+        this.addCard(card);
+      } else {
+        // MOVE
+        if (origen === this.groupId) {
+          this.removeCard(card.id);
+        } else if (destino === this.groupId) {
+          this.addCard(card);
+        }
+      }
     }
     this.render();
   }
-}
 
   // ===========
   //     AUX
@@ -304,12 +332,11 @@ actualizarCard(eventArgs) {
     };
     this.#cards.push(card);
     this.addCard(card);
-
   }
 
   getNextCardId() {
     const highestCardId = this.#cards.reduce((prev, current) => {
-      return (prev > current.id) ? prev : current.id;
+      return prev > current.id ? prev : current.id;
     }, 0);
     return highestCardId + 1;
   }
@@ -318,10 +345,14 @@ actualizarCard(eventArgs) {
     let newCard = this.newCardComponent();
     card.id = this.getNextCardId();
     let cardElement = this.#cardsContainer.appendChild(newCard);
-    cardElement.setAttribute("id", card.id);
+    cardElement.setAttribute("id", "card-" + card.id);
     newCard.vista = this.getHtmlFromCard(card);
     const groupCards = this.filterGroupCards();
     this.#cardsNumberElement.textContent = "(" + groupCards.length + ")";
+  }
+
+  removeCard(cardId) {
+    this.#cardsContainer.querySelector(`#card-${cardId}`)?.remove();
   }
 
   // ===========
@@ -335,7 +366,6 @@ actualizarCard(eventArgs) {
   filterGroupCards() {
     return this.#cards.filter((card) => card.groupId === this.#group.id);
   }
-
 
   getCardById(id) {
     return this.#cards.filter((card) => card.id === id);
@@ -373,7 +403,7 @@ actualizarCard(eventArgs) {
   }
 
   render() {
-    console.log("Kanban Groups - Render group " + this.#group.id);
+    //console.log("Kanban Groups - Render group " + this.#group.id);
     this.#titleElement.textContent = this.#group.title;
     if (this.#group.color && this.#group.color !== "") {
       this.style.setProperty("--titleColor", this.#group.color);
@@ -394,16 +424,16 @@ actualizarCard(eventArgs) {
 
     cardsComponents.forEach((cardComponent, index) => {
       let card = groupCards[index];
-      cardComponent.setAttribute('id', card.id);
+      cardComponent.setAttribute("id", "card-" + card.id);
       cardComponent.estilos = cardStyles;
       cardComponent.datos = card;
-      
+
       if (this.#group.incidencias) {
         cardComponent.classList.add("incidencias");
       } else {
         cardComponent.classList.remove("incidencias");
       }
-      
+
       cardComponent.vista = this.getHtmlFromCard(card);
     });
   }
