@@ -1,83 +1,5 @@
 const template = document.createElement("template");
 template.innerHTML = `
-<style>
-:host {
-    display: flex;
-    flex-direction: column;
-    flex: 1 1 auto;
-    width: 100%;
-    height: auto;
-    gap: 5px;
-    background-color: var(--marble-2);
-    border: 1px solid var(--marble);
-    border-radius: 8px;
-}
-
-:host(.disabled) {
-  background-color: var(--white);
-}
-
-  .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 6px 8px;
-      color: var(--royal-blue);
-      font-size: 12px;
-      font-weight: 600;
-
-      &.info {
-        display: flex;
-        gap: 6px;
-      }
-
-      .ico {
-        cursor: pointer;
-        font-size: 12px;
-        color: var(--royal-blue);
-
-        &.ascii {
-          font-size: 16px;
-        }
-      }
-    }
-
-  .title {
-    color: var(--titleColor, --royal-blue);
-  }
-
-  .number {
-    color: var(--slate);
-  }
-
-  .cards {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding: 0 12px;
-
-    &.dragging {
-      background-color: var(--pale-grey-3);
-      border: 1px solid var(--pale-grey-3);
-      border-radius: 8px;
-      padding: 6px 8px;
-    }
-  }
-
-  .footer {
-    display: flex;
-    align-items: center;
-    padding: 0 0 5px 16px;
-    color: var(--steel);
-    font-size: 14px;
-    font-weight: 500;
-    
-    .add {
-      cursor: pointer;
-    }
-  }
-
-</style>
 <div class="header">
     <div class="info">
         <span class="title" contenteditable="true"></span>
@@ -154,24 +76,33 @@ class KanbanGroup extends HTMLElement {
   }
 
   connectedCallback() {
-    const shadowRoot = this.attachShadow({ mode: "open" });
-    shadowRoot.appendChild(template.content.cloneNode(true));
+    this.appendChild(template.content.cloneNode(true));
 
-    this.#titleElement = shadowRoot.querySelector(".title");
-    this.#cardsNumberElement = shadowRoot.getElementById("cardsNumber");
-    this.#cardsContainer = shadowRoot.querySelector(".cards");
-    this.#addCardContainer = shadowRoot.querySelector(".add");
+    this.#titleElement = this.querySelector(".title");
+    this.#cardsNumberElement = this.querySelector(".number");
+    this.#cardsContainer = this.querySelector(".cards");
+    this.#addCardContainer = this.querySelector(".add");
 
     this.#addCardContainer.addEventListener("click", () => this.clickAddCard());
 
     // When a card is released we need to know where to put it.
-    this.#cardsContainer.addEventListener("drop", (event) =>
-      this.handleCardDrop(event)
-    );
+    this.#cardsContainer.addEventListener("drop", this.handleCardDrop);
     this.#cardsContainer.addEventListener("dragover", this.handleCardDragOver);
-    this.#cardsContainer.addEventListener(
+    this.#cardsContainer.addEventListener("dragleave", this.handleCardDragLeave);
+  }
+
+  disconnectedCallback() {
+    this.#cardsContainer.removeEventListener("drop", this.handleCardDrop);
+    this.#cardsContainer.removeEventListener(
+      "dragover",
+      this.handleCardDragOver
+    );
+    this.#cardsContainer.removeEventListener(
       "dragleave",
       this.handleCardDragLeave
+    );
+    this.#addCardContainer.removeEventListener("click", () =>
+      this.clickAddCard()
     );
   }
 
@@ -211,23 +142,30 @@ class KanbanGroup extends HTMLElement {
 
   handleCardDragStart(event) {
     // El contexto de this en este punto es wc-card, no wc-kanban-group.
-    const cardId = event.target.getAttribute("id");
-
-    event.dataTransfer.setData("text/plain", cardId);
-    event.dataTransfer.effectAllowed = "move";
+    const { target, dataTransfer } = event;
+    const cardId = target.getAttribute("id");
+    dataTransfer.setData("text/plain", cardId);
+    dataTransfer.effectAllowed = "move";
   }
 
   handleCardDragEnd(event) {
-    event.preventDefault();
   }
 
-  handleCardDragOver(event) {
+  handleCardDragOver (event) {
     event.preventDefault();
+    console.log(event, this);
     const { target, dataTransfer } = event;
-    const cardId = dataTransfer.getData("text/plain");
-    //const card = this.cards.find((card) => card.id === Number(cardId.split("-")[1]));
-    console.log(cardId, target);
-    if (!cardId || this.#cardsContainer.querySelector(`#card-${cardId}`)) {
+    const draggedCardId = dataTransfer.getData("text/plain");
+    if (!draggedCardId) {
+      console.error("No se pudo obtener el ID de la tarjeta arrastrada.");
+      return;
+    }
+
+    const textId = target.getAttribute("id");
+    const id = textId ? Number(textId?.split("-")[1]) : null;
+    console.log(textId, id, this.groupId);
+    // Ignore this event if the card is already in the group
+    if (this.groupId === id) {
       return;
     }
     console.log("Drag over");
@@ -238,9 +176,9 @@ class KanbanGroup extends HTMLElement {
     event.preventDefault();
   }
 
-  handleCardDrop(event) {
+  handleCardDrop = (event) => {
     event.preventDefault();
-    console.log("drop", event, document, this); // this es el wc-kanban-group que recibe el objeto
+    console.log("drop", event, this); // this es el wc-kanban-group que recibe el objeto
 
     const { dataTransfer } = event;
     const cardId = dataTransfer.getData("text/plain");
@@ -271,7 +209,7 @@ class KanbanGroup extends HTMLElement {
       bubbles: true,
       composed: true,
     });
-    this.shadowRoot.dispatchEvent(event);
+    this.dispatchEvent(event);
   }
 
   actualizarCard(eventArgs) {

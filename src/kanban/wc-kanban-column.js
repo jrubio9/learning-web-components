@@ -1,21 +1,88 @@
 const template = document.createElement("template");
 template.innerHTML = `
 <style>
-:host {
-    display: flex;
-    flex-direction: column;
-    flex: 1 1 auto;
-    gap: 10px;
-    min-width: 300px;
-    max-width: 350px;
-}
-
 .groups {
     display: flex;
     flex-direction: column;
     width: 100%;
     gap: 15px;
     height: min-content;
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  width: 100%;
+  height: auto;
+  gap: 5px;
+  background-color: var(--marble-2);
+  border: 1px solid var(--marble);
+  border-radius: 8px;
+
+  &.disabled {
+    background-color: var(--white);
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 8px;
+    color: var(--royal-blue);
+    font-size: 12px;
+    font-weight: 600;
+
+    &.info {
+      display: flex;
+      gap: 6px;
+    }
+
+    .ico {
+      cursor: pointer;
+      font-size: 12px;
+      color: var(--royal-blue);
+
+      &.ascii {
+        font-size: 16px;
+      }
+    }
+  }
+
+  .title {
+    color: var(--titleColor, --royal-blue);
+  }
+
+  .number {
+    color: var(--slate);
+  }
+
+  .cards {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 0 12px;
+
+    &.dragging {
+      background-color: var(--pale-grey-3);
+      border: 1px solid var(--pale-grey-3);
+      border-radius: 8px;
+      padding: 6px 8px;
+    }
+  }
+
+  .footer {
+    display: flex;
+    align-items: center;
+    padding: 0 0 5px 16px;
+    color: var(--steel);
+    font-size: 14px;
+    font-weight: 500;
+    
+    .add {
+      cursor: pointer;
+    }
+  }
 }
 
 .add-group {
@@ -65,10 +132,9 @@ class KanbanColumn extends HTMLElement {
   }
 
   connectedCallback() {
-    const shadowRoot = this.attachShadow({ mode: "open" });
-    shadowRoot.appendChild(template.content.cloneNode(true));
-    this.#groupsContainer = shadowRoot.querySelector(".groups");
-    this.#addGroupElement = shadowRoot.querySelector(".add-group");
+    this.appendChild(template.content.cloneNode(true));
+    this.#groupsContainer = this.querySelector(".groups");
+    this.#addGroupElement = this.querySelector(".add-group");
 
     this.#addGroupElement.addEventListener("click", () => this.clickAddGroup());
   }
@@ -161,6 +227,7 @@ class KanbanColumn extends HTMLElement {
 
     while (this.#groupsContainer.childNodes.length < needed) {
       let kanbanGroup = document.createElement("wc-kanban-group");
+      kanbanGroup.classList.add("group");
       this.#groupsContainer.appendChild(kanbanGroup);
     }
     return this.#groupsContainer.childNodes;
@@ -177,6 +244,7 @@ class KanbanColumn extends HTMLElement {
     groups.forEach((renderGroup, index) => {
       var grupo = estructuraGrupos[index];
       renderGroup.group = grupo;
+      renderGroup.setAttribute("group-id", "group-" + grupo.id);
       renderGroup.cards = this.#cards;
 
       if (grupo.classList) {

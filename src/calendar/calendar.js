@@ -203,7 +203,7 @@ let dateFecha = new Intl.DateTimeFormat("es-ES", {
 
 function Calendario() {
   const calendario = document.querySelector("wc-calendario");
-  //calendario.dias = 31; // Por defecto vendrán 7
+  
   calendario.eventos = eventos;
 
   let fechaInicial = new Date();

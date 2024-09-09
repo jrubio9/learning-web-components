@@ -1,0 +1,48 @@
+<style>
+  h1 {
+    padding: 0 10px;
+  }
+  .components-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 5px 15px;
+  }
+</style>
+
+<h1>Components list</h1>
+<div class="components-list">
+  <!-- ACCORDION -->
+  <wc-accordion>
+    <span slot="title">Accordion</span>
+    <div slot="content">
+      <h3>Description</h3>
+      div
+      <p>Content</p>
+      <h3>Example</h3>
+      <wc-accordion>
+        <span slot="title">Title example</span>
+        <span slot="content">Content example</span>
+      </wc-accordion>
+    </div>
+  </wc-accordion>
+  <!-- POPOVER -->
+  <wc-accordion>
+    <span slot="title">Popover</span>
+    <span slot="content">
+      <simple-popover placement="bottom">
+        <div slot="trigger">
+          <button>Haz hover aquí</button>
+        </div>
+        <p>Este es el contenido del popover.</p>
+      </simple-popover>
+    </span>
+  </wc-accordion>
+  <!-- LOGIN -->
+  <wc-accordion>
+    <span slot="title">Login button</span>
+    <span slot="content">
+      <wc-login></wc-login>
+    </span>
+  </wc-accordion>
+</div>

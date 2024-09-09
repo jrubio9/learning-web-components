@@ -13,6 +13,14 @@ template.innerHTML = `
     flex: 1 1 auto;
     gap: 15px;
 }
+.column {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  gap: 10px;
+  min-width: 300px;
+  max-width: 350px;
+}
 .last-column {
     display: flex;
     min-width: 180px;
@@ -78,6 +86,7 @@ class Kanban extends HTMLElement {
   clickAddColumn() {
     let columnaKanban = document.createElement("wc-kanban-column");
     columnaKanban.classList.add("wc-kanban-column");
+    columnaKanban.classList.add("column");
     columnaKanban.id = this.#columnsElement.childNodes.length;
     this.#columnsElement.appendChild(columnaKanban);
     this.#columnsStructure.push({ groups: [] });
@@ -113,6 +122,7 @@ class Kanban extends HTMLElement {
     while (columns.childNodes.length < necesarios) {
       let columnaKanban = document.createElement("wc-kanban-column");
       columnaKanban.classList.add("wc-kanban-column");
+      columnaKanban.classList.add("column");
       columns.appendChild(columnaKanban);
     }
 
@@ -136,5 +146,6 @@ class Kanban extends HTMLElement {
     });
   }
 }
-
-customElements.define("wc-kanban", Kanban);
+if (!customElements.get("wc-kanban")) {
+  customElements.define("wc-kanban", Kanban);
+}

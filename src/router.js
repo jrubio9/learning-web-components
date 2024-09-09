@@ -21,6 +21,18 @@ const routes = {
         description: "Kanban Web Component",
         script: () => import("./kanban/kanban.js"),
     },
+    vacations: {
+        template: "src/vacations-calendar/index.html",
+        title: "Vacations",
+        description: "Auto-managed Vacations calendar",
+        script: () => import("./vacations-calendar/vacations.js"),
+    },
+    components: {
+        template: "src/components/index.html",
+        title: "Components",
+        description: "Components Web Component",
+        script: () => import("./components/components.js"),
+    }
 };
 
 const locationHandler = async () => {
