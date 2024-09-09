@@ -343,6 +343,9 @@ class CalendarioDia extends HTMLElement {
             this.#eventosContainer.classList.add("crecer");
         }
 
+        if (!this.#eventos || this.#eventos.length === 0)
+            return;
+
         const eventosDia = this.filtrarEventosPorFecha(this.#dia);
         this.crearDestruirContenedores(eventosDia.length);
 

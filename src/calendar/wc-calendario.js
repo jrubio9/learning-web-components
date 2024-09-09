@@ -228,8 +228,6 @@ class Calendario extends HTMLElement {
     }
 
     render() {
-        if (!this.#eventos || this.#eventos.length === 0)
-            return;
 
         const vistaMes = this.#vistaMes;
         const fechaInicial = this.#fechaInicial;
