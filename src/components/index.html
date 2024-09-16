@@ -50,15 +50,16 @@
     <span slot="title">Modal</span>
     <span slot="content">
       <wc-modal id="custom-modal">
-        <div slot="header" class="modal-header">
+        <div slot="header">
           <h2>Mi Modal</h2>
-          <span>X</span>
         </div>
-        <div slot="body" class="modal-body">
+        <div slot="body" class="body">
           <p>Contenido</p>
         </div>
         <div slot="footer">
           <p>Footer</p>
+          <button id="cancel">Cancel</button>
+          <button id="save">Save</button>
         </div>
       </wc-modal>
       <button id="open-button">Abrir Modal</button>
