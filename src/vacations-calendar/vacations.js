@@ -1,23 +1,5 @@
 const registeredVacations = [];
 
-const users = [
-  {
-    id: 1,
-    name: "User 1",
-    color: "blue",
-  },
-  {
-    id: 2,
-    name: "User 2",
-    color: "red",
-  },
-  {
-    id: 3,
-    name: "User 3",
-    color: "green",
-  },
-];
-
 const months = [
   "January",
   "February",
@@ -31,9 +13,7 @@ const months = [
   "October",
   "November",
   "December",
-]
-
-let currentUser = null;
+];
 
 function VacationsCalendar() {
   let fechaInicial = new Date();
@@ -46,6 +26,15 @@ function VacationsCalendar() {
   vacationsCalendar.eventos = registeredVacations;
 
   vacationsCalendar.addEventListener("nuevo", (e) => {
+    if (!localStorage.getItem("user")) {
+      window.alert("You need to login first");
+      return;
+    }
+    const userDetails = localStorage.getItem("user");
+    console.log(userDetails);
+    registeredVacations.push({ id: userDetails.id, html: "<div>Hola</div>" });
+
+    console.log(registeredVacations);
     console.log("evento nuevo!", e.detail);
   });
 
@@ -84,8 +73,7 @@ function VacationsCalendar() {
 
   const setTitleMonth = (date) => {
     console.log("Date: " + date);
-  monthTitle.innerText =
-    "Vacations of " + months[date.getMonth()];
+    monthTitle.innerText = "Vacations of " + months[date.getMonth()];
   };
 
   setTitleMonth(vacationsCalendar.range_start);

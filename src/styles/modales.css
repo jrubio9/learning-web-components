@@ -1,0 +1,45 @@
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    justify-content: center;
+    align-items: center;
+
+    &.open {
+      display: flex;
+    }
+
+
+    .window {
+        background-color: white;
+        border-radius: 10px;
+        position: relative;
+        max-width: 500px;
+        width: 100%;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 5px 10px;
+
+    }
+
+    .body {
+      
+    }
+
+    .footer {
+
+    }
+  }
+
+
+  .close-button {
+    cursor: pointer;
+  }
