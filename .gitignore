@@ -21,6 +21,7 @@ mono_crash.*
 [Dd]ebugPublic/
 [Rr]elease/
 [Rr]eleases/
+[Dd]ist/
 x64/
 x86/
 [Ww][Ii][Nn]32/
@@ -396,3 +397,4 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+dist/src/index.html
