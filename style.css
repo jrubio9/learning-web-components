@@ -49,8 +49,9 @@ html {
 nav {
   display: flex;
   padding: 5px 15px;
-  gap: 10px;
+  gap: 20px;
   align-items: center;
+  justify-content: center;
 
   & a {
     color: var(--royal-blue);
@@ -73,6 +74,14 @@ body {
   flex-direction: column;
   position: absolute;
   inset: 0;
+}
+
+footer {
+  display: flex;
+  padding: 10px 15px;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
 }
 
 #content {
