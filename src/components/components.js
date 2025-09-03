@@ -1,17 +1,23 @@
 function Components() {
-  console.log("Exec components");
-  const components = document.querySelector(".components-list");
+    console.log("Exec components");
+    const components = document.querySelector(".components-list");
 
-  //
-  // MODAL
-  //
-  const modal = document.getElementById("custom-modal");
-  const openButton = document.getElementById("open-button");
+    //
+    // MODAL
+    //
+    const modal = document.getElementById("custom-modal");
+    const openButton = document.getElementById("open-button");
 
-  openButton.addEventListener("click", () => {
-    console.log("Abrir modal");
-    modal.openModal();
-  });
+    openButton.addEventListener("click", () => {
+        console.log("Abrir modal");
+        modal.openModal();
+    });
+
+    // TOGGLE SWITCH
+    const toggle = document.querySelector("wc-toggle-text");
+    toggle.addEventListener("change", e => {
+        console.log("Evento change ->", e.detail.value);
+    });
 }
 
 export default Components = new Components();
