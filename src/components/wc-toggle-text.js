@@ -2,19 +2,21 @@ const template = document.createElement("template");
 template.innerHTML = `
       <style>
         .switch {
-          --_switch-bg-clr: #70a9c5;
+          --_switch-bg-clr: #b7b7ea;
           --_switch-padding: 4px;
-          --_slider-bg-clr: rgba(12, 74, 110, 0.65);
-          --_slider-bg-clr-on: rgba(12, 74, 110, 1);
-          --_slider-txt-clr: #ffffff;
+          --_slider-bg-clr: rgba(129, 129, 214, 0.65); // rgba(12, 74, 110, 0.65);
+          --_slider-bg-clr-on: rgba(129, 129, 214, 1); // rgba(12, 74, 110, 1);
+          --_slider-txt-clr: #fbfbfb;
           --_label-padding: 1rem 2rem;
           --_switch-easing: cubic-bezier(0.47,1.64,0.41,0.8);
+          --_border-radius: 9999px;
 
-          color: white;
+          
+          color: var(--_slider-txt-clr);
           width: fit-content;
           display: grid;
           grid-template-columns: repeat(2, minmax(0, 1fr));
-          border-radius: 9999px;
+          border-radius: var(--_border-radius);
           cursor: pointer;
           position: relative;
           isolation: isolate;
@@ -56,9 +58,7 @@ template.innerHTML = `
           inset: 0;
           z-index: -2;
         }
-        .switch:focus-within::after {
-          inset: -0.25rem;
-        }
+
         .switch:has(input:checked):hover > span:first-of-type,
         .switch:has(input:not(:checked)):hover > span:last-of-type {
           opacity: 1;
