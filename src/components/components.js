@@ -1,3 +1,6 @@
+import "../styles/modal.css";
+import "./wc-testimonials";
+
 function Components() {
     console.log("Exec components");
     const components = document.querySelector(".components-list");
@@ -10,7 +13,7 @@ function Components() {
 
     openButton.addEventListener("click", () => {
         console.log("Abrir modal");
-        modal.openModal();
+        modal.open();
     });
 
     // TOGGLE SWITCH

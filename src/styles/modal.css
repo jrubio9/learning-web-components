@@ -1,0 +1,61 @@
+/* Modal styles */
+
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+}
+
+.modal-body .fila {
+  display: flex;
+  gap: 12px;
+}
+
+.modal-body .fila .columna {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.form-label {
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--unaccent-color-2);
+}
+
+.form-input {
+  padding: 10px;
+  border: 1px solid var(--unaccent-color);
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.form-input.long {
+  min-height: 140px;
+}
+
+.form-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--unaccent-color-2);
+  cursor: pointer;
+}
+
+.modal-footer {
+  display: flex;
+  flex-direction: column;
+  padding: 16px 24px;
+  border-top: 1px solid #eee;
+  gap: 12px;
+}
+
+.modal-img-lateral {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+}

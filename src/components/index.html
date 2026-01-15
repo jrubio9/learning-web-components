@@ -50,16 +50,67 @@
     <span slot="title">Modal</span>
     <span slot="content">
       <wc-modal id="custom-modal">
+        <!-- Si ponemos esto saldrá imagen en la izquierda <div slot="image"></div> -->
+        <div slot="image" class="modal-img-lateral" style="background-image: url('https://www.adtaller.com/3df0b1be0d04a2cb3c7c.png');"></div>
         <div slot="header">
-          <h2>Mi Modal</h2>
+        <h3 class="secondary">🔍 Necesitamos algunos datos para continuar</h3>
+        <p style="margin-left: 30px;">Nos pondremos en contacto lo antes posible.</p>
         </div>
-        <div slot="body" class="body">
-          <p>Contenido</p>
+
+        <form id="contact-form" slot="body" class="modal-body">
+        <div class="fila">
+            <div class="columna">
+                <label class="form-label" for="nombre">Nombre</label>
+                <input id="nombre" class="form-input" type="text">
+            </div>
+            <div class="columna">
+                <label class="form-label" for="apellidos">Apellidos</label>
+                <input id="apellidos" class="form-input" type="text">
+            </div>
         </div>
-        <div slot="footer">
-          <p>Footer</p>
-          <button id="cancel">Cancel</button>
-          <button id="save">Save</button>
+
+        <div class="fila">
+            <div class="columna">
+                <label class="form-label" for="nombreTaller">Nombre taller *</label>
+                <input id="nombreTaller" class="form-input" type="text" required>
+            </div>
+            <div  class="columna">
+                <label class="form-label" for="provincia">Provincia *</label>
+                <input id="provincia" class="form-input" type="text" required>
+            </div>
+        </div>
+
+        <div class="fila">
+            <div  class="columna">
+                <label class="form-label" for="telefono">Teléfono *</label>
+                <input id="telefono" class="form-input" type="text" required>
+            </div>
+            <div  class="columna">
+                <label class="form-label" for="email">Email *</label>
+                <input id="email" class="form-input" type="text" required>
+            </div>
+        </div>
+
+        <div class="fila">
+            <div class="columna" >
+                <label class="form-label" for="mensaje">Mensaje:</label>
+                <input id="mensaje" class="form-input long" type="text">
+            </div>
+        </div>
+        </form>
+
+        <div slot="footer" class="modal-footer">
+            <label class="form-checkbox">
+                <input id="politicaCheck" type="checkbox" required>
+                <span> He leído y acepto la
+                <span><a href="https://static.adparts.com/privacidad.html" target="_blank">política de privacidad</a></span>
+            </label>
+        <button type="submit" form="contact-form" class="btn btn-primary">Solicitar información</button>
+        <div id="recaptcha-badge">
+            This site is protected by reCAPTCHA and the Google
+            <a href="https://policies.google.com/privacy" target="_blank">Privacy Policy</a> and
+            <a href="https://policies.google.com/terms" target="_blank">Terms of Service</a> apply.
+        </div>
         </div>
       </wc-modal>
       <button id="open-button">Abrir Modal</button>
@@ -80,4 +131,9 @@
         </span>
     </wc-accordion>
 
+    <!-- TESTIMONIALS -->
+    <div class="flex" style="flex-direction: column;">
+        <h3 slot="title">Testimonials</h3>
+        <wc-testimonials></wc-testimonials>
+    </div>
 </div>

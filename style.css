@@ -1,5 +1,4 @@
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
@@ -33,6 +32,17 @@
   --marble: #EAEAEA;
   --marble-2: #FBFBFB;
   --white: #ffffff;
+
+    --primary-color: #363092;
+  --secondary-color: #4C87C6;
+  --light-color: #FBFBFB;
+  --dark-color: #252525;
+  --accent-color: #FF6F61;
+  --accent-color-2: #FFA500;
+  --unaccent-color: #bababa;
+  --unaccent-color-2: #6d6d6d;
+
+  --font-family: 'Montserrat', Tahoma, Geneva, Verdana, sans-serif;
 
   /* Colores estados tarjetas */
   --pastel-green: #E8F0D2;
@@ -82,6 +92,25 @@ footer {
   gap: 10px;
   align-items: center;
   justify-content: space-between;
+}
+
+h1 {
+  line-height: 46px;
+  color: var(--primary-color)
+}
+
+h2 {
+  margin-bottom: 20px;
+  color: var(--secondary-color);
+}
+
+.flex {
+  display: flex;
+}
+
+.pad-x-20 {
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 #content {

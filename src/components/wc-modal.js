@@ -1,106 +1,167 @@
-// Creamos la estructura del componente
 const template = document.createElement("template");
 template.innerHTML = `
-  <style>
+<style>
+  :host {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+  }
 
-    .wc-modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.6);
-      justify-content: center;
-      align-items: center;
+  :host([open]) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
-      &.open {
-        display: flex;
-      }
+  .overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,.5);
+  }
 
-      .header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 5px 10px;
+  .modal {
+    position: relative;
+    background: white;
+    border-radius: 12px;
+    max-width: 720px;
+    width: 90%;
+    max-height: 90vh;
+    display: flex;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,.2);
+    animation: enter 200ms ease;
+  }
 
-      }
+  .image {
+    flex: 0 0 280px;
+    background: #f5f5f5;
+    display: none;
+  }
 
-      .body {
-        
-      }
+  :host([has-image]) .image {
+    display: flex;
+  }
 
-      .footer {
+  :host([has-image]) .modal {
+    max-width: 1000px;
+  }
 
-      }
-    }
+  .content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
 
-    .modal-window {
-      background-color: white;
-      border-radius: 10px;
-      position: relative;
-      max-width: 500px;
-      width: 100%;
-    }
+  header, footer {
+    padding: 20px;
+  }
 
-    .close-button {
-      cursor: pointer;
-    }
+  main {
+    padding: 0 20px;
+    overflow-y: auto;
+  }
 
-  </style>
+  .close {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    font-size: 28px;
+    cursor: pointer;
+    background: none;
+    border: none;
+  }
 
-  <div id="modal" class="wc-modal">
-    <div class="modal-window">
-        <div class="header">
-          <slot name="header"></slot>
-          <span class="close-button">X</span>
-        </div>
-        <slot name="body"></slot>
-        <slot name="footer"></slot>
-    </div>
+  @keyframes enter {
+    from { transform: scale(.95); opacity: 0; }
+    to   { transform: scale(1); opacity: 1; }
+  }
+
+  @media (max-width: 768px) {
+  .image {
+    display: none !important;
+  }
+}
+</style>
+
+<div class="overlay"></div>
+
+<div class="modal">
+  <button class="close" aria-label="Cerrar">&times;</button>
+
+  <div class="image">
+    <slot name="image"></slot>
   </div>
+
+  <div class="content">
+    <header>
+      <slot name="header"></slot>
+    </header>
+
+    <main>
+      <slot name="body"></slot>
+    </main>
+
+    <footer>
+      <slot name="footer"></slot>
+    </footer>
+  </div>
+</div>
 `;
 
-class WcModal extends HTMLElement {
-  #modal = null;
-  #closeButton = null;
+export class WCModal extends HTMLElement {
+  static get observedAttributes() {
+    return ["open"];
+  }
 
   constructor() {
     super();
-    // Attach Shadow DOM
     this.attachShadow({ mode: "open" });
     this.shadowRoot.appendChild(template.content.cloneNode(true));
   }
 
-  connectedCallback() {
-    // Seleccionar el modal y el botón de cierre
-    this.#modal = this.shadowRoot.querySelector("#modal");
-    this.#closeButton = this.shadowRoot.querySelector(".close-button");
-    this.#closeButton.addEventListener("click", () => this.closeModal());
+    connectedCallback() {
+        const imageSlot = this.shadowRoot.querySelector('slot[name="image"]');
 
-    // Renderizar el contenido inicial (si es necesario)
-    this.render();
-  }
+        const updateImageState = () => {
+            const hasContent = imageSlot.assignedElements().length > 0;
 
-  render() {
-    // Aquí podrías renderizar contenido adicional o dinámico si fuera necesario
-  }
+            if (hasContent) {
+            this.setAttribute("has-image", "");
+            } else {
+            this.removeAttribute("has-image");
+            }
+        };
 
-  // Método para abrir el modal
-  openModal() {
-    this.#modal.classList.add("open");
-  }
+        imageSlot.addEventListener("slotchange", updateImageState);
+        updateImageState();
 
-  // Método para cerrar el modal
-  closeModal() {
-    this.#modal.classList.remove("open");
-  }
+        this.shadowRoot.querySelector(".overlay")
+            .addEventListener("click", () => this.close());
+
+        this.shadowRoot.querySelector(".close")
+            .addEventListener("click", () => this.close());
+
+        document.addEventListener("keydown", this.#onKeyDown);
+    }
 
   disconnectedCallback() {
-    // Limpiar los event listeners cuando el componente sea removido del DOM
-    this.#closeButton.removeEventListener("click", () => this.closeModal);
+    document.removeEventListener("keydown", this.#onKeyDown);
+  }
+
+  #onKeyDown = (e) => {
+    if (e.key === "Escape" && this.hasAttribute("open")) {
+      this.close();
+    }
+  };
+
+  open() {
+    this.setAttribute("open", "");
+  }
+
+  close() {
+    this.removeAttribute("open");
   }
 }
 
-// Definir el custom element
-customElements.define("wc-modal", WcModal);
+customElements.define("wc-modal", WCModal);
