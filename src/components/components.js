@@ -1,5 +1,6 @@
 import "../styles/modal.css";
 import "./wc-testimonials";
+import { showToast } from "../toasts.js";
 
 function Components() {
     console.log("Exec components");
@@ -20,6 +21,20 @@ function Components() {
     const toggle = document.querySelector("wc-toggle-text");
     toggle.addEventListener("change", e => {
         console.log("Evento change ->", e.detail.value);
+    });
+
+    // TOASTS
+
+    document.getElementById("show-success-toast-btn").addEventListener("click", () => {
+        showToast("This is a success message!", "success");
+    });
+
+    document.getElementById("show-error-toast-btn").addEventListener("click", () => {
+        showToast("This is a error message!", "error");
+    });
+
+    document.getElementById("show-warning-toast-btn").addEventListener("click", () => {
+        showToast("This is a warning message!", "warning");
     });
 }
 
