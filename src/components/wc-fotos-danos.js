@@ -1,4 +1,4 @@
-import fotomaton from "../fotos-danos/fotomaton.js";
+import fotomaton from "../utiles/fotomaton.js";
 
 const ICON_GALLERY = `
   <svg viewBox="0 -960 960 960" aria-hidden="true" focusable="false">
