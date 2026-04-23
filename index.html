@@ -32,18 +32,38 @@
     <script type="module" src="src/vacations-calendar/wc-vacations.js"></script>
 </head>
 <body>
-    <nav>
-        <a href="/">Home</a>
-        <a href="#calendar">Calendar</a>
-        <a href="#kanban">Kanban</a>
-        <a href="#vacations">Vacations</a>
-        <a href="#components">Small components</a>
-    </nav>
-    <div id="content"></div>
+    <div class="page-shell">
+        <header class="site-header">
+            <div class="site-header__inner">
+                <a class="site-brand" href="/">
+                    <span class="site-brand__mark">WC</span>
+                    <span class="site-brand__text">
+                        <strong>Web Components</strong>
+                        <span>Playground and demos</span>
+                    </span>
+                </a>
+
+                <nav class="site-nav" aria-label="Principal">
+                    <a href="/" data-route="/">Home</a>
+                    <a href="#calendar" data-route="calendar">Calendar</a>
+                    <a href="#kanban" data-route="kanban">Kanban</a>
+                    <a href="#vacations" data-route="vacations">Vacations</a>
+                    <a href="#components" data-route="components">Small components</a>
+                </nav>
+            </div>
+        </header>
+
+        <main class="page-main">
+            <div id="content"></div>
+        </main>
+
+        <footer class="site-footer">
+            <div class="site-footer__inner">
+                <div class="flex">Made with ❤️ by Rubz</div>
+                <div class="flex">Checkout my&nbsp;<a href="https://rubz.vercel.app" target="_blank">Personal page</a>&nbsp;or my&nbsp;<a href="https://twitter.com/rubzdev" target="_blank">Twitter</a></div>
+            </div>
+        </footer>
+    </div>
     <script src="src/router.js"></script>
 </body>
-<footer>
-    <div class="flex">Made with ❤️ by Rubz</div>
-    <div class="flex">Checkout my <a href="https://rubz.vercel.app" target="_blank">Personal page</a> or my <a href="https://twitter.com/rubzdev" target="_blank">Twitter</a></div>
-</footer>
 </html>

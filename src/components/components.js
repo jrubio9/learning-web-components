@@ -1,5 +1,6 @@
 import "../styles/modal.css";
 import "./wc-testimonials";
+import "./wc-fotos-danos.js";
 import { showToast } from "../toasts.js";
 
 function Components() {
@@ -36,6 +37,32 @@ function Components() {
     document.getElementById("show-warning-toast-btn").addEventListener("click", () => {
         showToast("This is a warning message!", "warning");
     });
+
+    // FOTOS DANOS
+    const fotosDanos = document.getElementById("demo-fotos-danos");
+    const fotosDanosOutput = document.getElementById("demo-fotos-danos-output");
+    const fotosDanosModeButtons = document.querySelectorAll("[data-fotos-danos-mode]");
+
+    const renderFotosDanosValue = () => {
+        fotosDanosOutput.textContent = JSON.stringify(fotosDanos.value, null, 2);
+    };
+
+    const updateFotosDanosButtons = () => {
+        fotosDanosModeButtons.forEach(button => {
+            button.classList.toggle("active", button.dataset.fotosDanosMode === (fotosDanos.getAttribute("mode") || "auto"));
+        });
+    };
+
+    fotosDanosModeButtons.forEach(button => {
+        button.addEventListener("click", () => {
+            fotosDanos.setAttribute("mode", button.dataset.fotosDanosMode);
+            updateFotosDanosButtons();
+        });
+    });
+
+    fotosDanos.addEventListener("change", renderFotosDanosValue);
+    updateFotosDanosButtons();
+    renderFotosDanosValue();
 }
 
 export default Components = new Components();

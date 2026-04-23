@@ -13,18 +13,21 @@ const routes = {
         template: "src/calendar/index.html",
         title: "Calendar",
         description: "Calendar Web Component",
+        layout: "wide",
         script: () => import("./calendar/calendar.js")
     },
     kanban: {
         template: "src/kanban/index.html",
         title: "Kanban",
         description: "Kanban Web Component",
+        layout: "wide",
         script: () => import("./kanban/kanban.js"),
     },
     vacations: {
         template: "src/vacations-calendar/index.html",
         title: "Vacations",
         description: "Auto-managed Vacations calendar",
+        layout: "wide",
         script: () => import("./vacations-calendar/vacations.js"),
     },
     components: {
@@ -55,6 +58,12 @@ const locationHandler = async () => {
     document
         .querySelector('meta[name="description"]')
         .setAttribute("content", route.description);
+
+    document.querySelector(".page-shell")?.classList.toggle("layout-wide", route.layout === "wide");
+
+    document.querySelectorAll("[data-route]").forEach((link) => {
+        link.classList.toggle("selected", link.dataset.route === location);
+    });
 
     // Load the script if it exists
     if (route.script) {
